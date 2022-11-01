@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "Be VIP",
+    "slug": "be-vip",
+    "version": "5.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyCQKlJb2UoVNRuh8MHoQWypnP1W4Tzq1jw"
+      }
+    },
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "android": {
+      "package": "com.awii.vip",
+      "permissions": [
+        "ACCESS_FOREGROUND_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
+      "versionCode": 5,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyD6HEAKAGpgDPEPVavCwSVBKQ8bHDcfkEU"
+        }
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8047e093-fcb2-4bb4-998c-a9b0e35df9a6"
+      }
+    }
+  },
+  "web": {
+    "favicon": "./assets/favicon.png"
+  }
+}
