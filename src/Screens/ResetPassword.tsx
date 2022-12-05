@@ -22,7 +22,7 @@ type Stack = {
   Person: undefined;
   Profile: undefined;
   Forget: undefined;
-  Resets:undefined;
+  Resets: undefined;
 };
 const Stack = createNativeStackNavigator<Stack>();
 
@@ -54,7 +54,7 @@ const ResetPassword = ({ navigation }: LoginScreenProps) => {
               resizeMode="contain"
               source={require("../../assets/Image/WLogo.png")}
               style={{
-                alignSelf:'center',
+                alignSelf: "center",
                 width: 294.72,
                 height: 185.9,
                 // position: "absolute",
@@ -66,7 +66,7 @@ const ResetPassword = ({ navigation }: LoginScreenProps) => {
               style={styles.input}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
-              selectionColor={'#927E5A'}
+              selectionColor={"#927E5A"}
               placeholder="Email address"
               placeholderTextColor={"#927E5A"}
               onChangeText={setEmail}
@@ -80,7 +80,7 @@ const ResetPassword = ({ navigation }: LoginScreenProps) => {
               style={styles.input}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
-              selectionColor={'#927E5A'}
+              selectionColor={"#927E5A"}
               placeholder="New password"
               placeholderTextColor={"#927E5A"}
               onChangeText={setPassword}
@@ -94,7 +94,7 @@ const ResetPassword = ({ navigation }: LoginScreenProps) => {
               underlineColorAndroid="transparent"
               autoCapitalize="none"
               placeholder="Confirm new password"
-              selectionColor={'#927E5A'}
+              selectionColor={"#927E5A"}
               placeholderTextColor={"#927E5A"}
               onChangeText={setPassword}
               value={password}
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     height: 51,
     justifyContent: "center",
     alignSelf: "center",
-    borderRadius:5
+    borderRadius: 5,
   },
   exit: {
     alignSelf: "center",

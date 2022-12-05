@@ -5,6 +5,7 @@ export const LOGOUT = "LOGOUT";
 export const PROFILE = "PROFILE";
 export const ONPROFILE = "ONPROFILE";
 export const ONCLUB = "ONCLUB";
+export const ONTEST = "ONTEST";
 export const RESTORE_TOKEN = "RESTORE_TOKEN";
 export const PRO = "PRO";
 export const FORPASSWORD = "FORPASSWORD";

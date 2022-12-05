@@ -1,14 +1,13 @@
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import ClubEvents from './ClubEvents';
-import Bars from './TabsScreen/Bars';
-import Clubs from './Clubs';
-import ClubBars from "../Screens/ClubBars"
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import ClubEvents from "./ClubEvents";
+import Bars from "./TabsScreen/Bars";
+import Clubs from "./Clubs";
+import ClubBars from "../Screens/ClubBars";
 
 const Tab = createMaterialTopTabNavigator();
- 
-function BarTopTab({route}) {
 
-const Product = route.params.productTitle;
+function BarTopTab({ route }) {
+  const Product = route.params.productTitle;
   return (
     <Tab.Navigator
       screenOptions={{
@@ -37,7 +36,7 @@ const Product = route.params.productTitle;
         component={ClubBars}
         initialParams={{ productTitle: Product }}
         options={({ route }) => ({
-          title: `Bars IN ${Product}`,
+          title: `Events IN ${Product}`,
         })}
       />
       <Tab.Screen

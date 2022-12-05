@@ -8,6 +8,7 @@ import {
   ScrollView,
   StatusBar,
   Dimensions,
+  SafeAreaView
 } from "react-native";
 import React, { useContext, useEffect } from "react";
 import { Context as Actions } from "../../Context/Actions";
@@ -31,6 +32,7 @@ import moment from "moment";
 
 import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
 import GeoLocation from "../../Components/GeoLocation";
+
 
 type Stack = {
   Login: undefined;
@@ -119,174 +121,182 @@ const Person = ({ route }) => {
         backgroundColor="#080402"
         barStyle="light-content"
       />
-       <ScrollView
-        contentContainerStyle={{ paddingBottom: 0 }}
-        showsVerticalScrollIndicator={false}
-        >
-      <ImageOverlay
-        overlayColor="#000000"
-        //  "#19282F"
-        overlayAlpha={0.8}
-        height={Dimensions.get("window").height}
-        source={require("../../../assets/Image/homeScreenBG.jpg")}
-      >
-       
-          <View style={{ alignItems: "center" }}>
-            <View style={styles.headerStyle}>
-              <View
-                style={{
-                  elevation: 5,
-                  shadowColor: "#927E5A",
-                  shadowOffset: { width: 3, height: 4 },
-                  shadowOpacity: 0.3,
-                  shadowRadius: 30,
-                }}
-              >
-                <Image
-                  resizeMode="cover"
-                  source={{ uri: state.pro?.data.image }}
-                  style={styles.imageStyle}
-                />
-              </View>
-
-              <View style={styles.textContainer}>
-                <Text
-                  style={[
-                    styles.textStyle,
-                    { fontSize: 24, fontFamily: "BaskervilleRegular" },
-                  ]}
+      <SafeAreaView style={{flex:1}}>
+        
+          <ImageOverlay
+            overlayColor="#000000"
+            //  "#19282F"
+            overlayAlpha={0.8}
+            height={Dimensions.get("window").height}
+            source={require("../../../assets/Image/homeScreenBG.jpg")}
+          >
+            <View style={{ alignItems: "center" }}>
+              <View style={styles.headerStyle}>
+                <View
+                  style={{
+                    elevation: 5,
+                    shadowColor: "#927E5A",
+                    shadowOffset: { width: 3, height: 4 },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 30,
+                  }}
                 >
-                  {name}
-                  <Text> {lastname} </Text>
-                </Text>
+                  <Image
+                    resizeMode="cover"
+                    source={{ uri: state.pro?.data.image }}
+                    style={styles.imageStyle}
+                  />
+                </View>
 
-                <Text style={styles.textStyle}>
-                  Location:
-                  <Text style={styles.textStyle}> {location} </Text>
-                </Text>
-
-                <Text style={styles.textStyle}>
-                  Email:
-                  <Text style={styles.textStyle}> {email}</Text>
-                </Text>
-
-                <Text style={styles.textStyle}>
-                  Age:
-                  <Text style={styles.textStyle}> {age} Years </Text>
-                </Text>
-
-                <View style={styles.subscriptionContainer}>
+                <View style={styles.textContainer}>
                   <Text
                     style={[
-                      styles.textStyle1,
-                      { color: "#000000", textAlignVertical: "center" },
+                      styles.textStyle,
+                      { fontSize: 24, fontFamily: "BaskervilleRegular" },
                     ]}
                   >
-                    {state.pro?.data.tier.name}
+                    {name}
+                    <Text> {lastname} </Text>
                   </Text>
+
+                  <Text style={styles.textStyle}>
+                    Location:
+                    <Text style={styles.textStyle}> {location} </Text>
+                  </Text>
+
+                  <Text style={styles.textStyle}>
+                    Email:
+                    <Text style={styles.textStyle}> {email}</Text>
+                  </Text>
+
+                  <Text style={styles.textStyle}>
+                    Age:
+                    <Text style={styles.textStyle}> {age} Years </Text>
+                  </Text>
+
+                  <View style={styles.subscriptionContainer}>
+                    <Text
+                      style={[
+                        styles.textStyle1,
+                        { color: "#000000", textAlignVertical: "center" },
+                      ]}
+                    >
+                      {state.pro?.data.tier.name}
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
-            <View>
-              <Image
-                source={require("../../../assets/Image/vip-frmae.png")}
-                style={{ height: 282, width: 250, alignSelf: "center" }}
-              />
+              
+              <View>
+              <View>
+                <Image
+                  source={require("../../../assets/Image/vip-frmae.png")}
+                  style={{ height: 282, width: 250, alignSelf: "center" }}
+                />
 
-              {/* <Image
+                {/* <Image
           source={require("../../../assets/Image/gcj.png")}
           style={{ height: 117, width: 400, alignSelf: "center" }}
         /> */}
-            </View>
+              </View>
 
-            <View
-              style={{
-                flexDirection: "row",
-                marginTop: hp("2%"),
-                justifyContent: "center",
-                position: "relative",
-                bottom: 5,
-                alignItems: "center",
-              }}
-            >
-              <TouchableOpacity
-                onPress={() =>
-                  Linking.openURL("https://www.facebook.com/bevipclothing/")
-                }
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginTop: hp("2%"),
+                  justifyContent: "center",
+                  position: "relative",
+                  bottom: 5,
+                  alignItems: "center",
+                }}
               >
-                {/* <MaterialCommunityIcons
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL("https://www.facebook.com/bevipclothing/")
+                  }
+                >
+                  {/* <MaterialCommunityIcons
                   name="facebook"
                   size={35}
                   color="#927E5A"
                 /> */}
-                {/* <Entypo name="facebook-with-circle" size={35} color="#927E5A" /> */}
-                <FontAwesome5 name="facebook" size={35} color="#927E5A" />
-              </TouchableOpacity>
+                  {/* <Entypo name="facebook-with-circle" size={35} color="#927E5A" /> */}
+                  <FontAwesome5 name="facebook" size={35} color="#927E5A" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL("https://www.instagram.com/bevipclothing/")
+                  }
+                >
+                  <Entypo
+                    name="instagram-with-circle"
+                    size={38}
+                    color="#927E5A"
+                    style={{ marginLeft: 5 }}
+                  />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL("https://www.instagram.com/bevipclothing/")
+                  }
+                >
+                  <Entypo
+                    name="twitter-with-circle"
+                    size={35}
+                    color="#927E5A"
+                    style={{ marginLeft: 5 }}
+                  />
+                </TouchableOpacity>
+              </View>
+
               <TouchableOpacity
-                onPress={() =>
-                  Linking.openURL("https://www.instagram.com/bevipclothing/")
-                }
+                onPress={LogoutHandler}
+                style={styles.pressableButton}
               >
-                <Entypo
-                  name="instagram-with-circle"
-                  size={38}
+                <MaterialIcons
+                  style={{ alignItems: "center" }}
+                  name="logout"
+                  size={20}
                   color="#927E5A"
-                  style={{ marginLeft: 5 }}
                 />
+                <Text style={[styles.textStyle, { color: "#927E5A", left: 5 }]}>
+                  Logout
+                </Text>
               </TouchableOpacity>
+
               <TouchableOpacity
-                onPress={() =>
-                  Linking.openURL("https://www.instagram.com/bevipclothing/")
-                }
+                style={{
+                  // backgroundColor:"yellow",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent:"center",
+                  marginTop: 15,
+                }}
+                onPress={() => navigation.navigate("Profiles")}
               >
-                <Entypo
-                  name="twitter-with-circle"
-                  size={35}
-                  color="#927E5A"
-                  style={{ marginLeft: 5 }}
-                />
+                <EvilIcons name="pencil" size={20} color="#FFFF" />
+                <Text
+                  style={[
+                    styles.textStyle,
+                    { color: "#FFFF", textDecorationLine: "underline" },
+                  ]}
+                >
+                  Edit Profile
+                </Text>
               </TouchableOpacity>
+                
+              </View>
+              
+              
+             
+
             </View>
 
-            <TouchableOpacity
-              onPress={LogoutHandler}
-              style={styles.pressableButton}
-            >
-              <MaterialIcons
-                style={{ alignItems: "center" }}
-                name="logout"
-                size={20}
-                color="#927E5A"
-              />
-              <Text style={[styles.textStyle, { color: "#927E5A", left: 5 }]}>
-                Logout
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginTop: 15,
-              }}
-              onPress={() => navigation.navigate("Profiles")}
-            >
-              <EvilIcons name="pencil" size={20} color="#FFFF" />
-              <Text
-                style={[
-                  styles.textStyle,
-                  { color: "#FFFF", textDecorationLine: "underline" },
-                ]}
-              >
-                Edit Profile
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-        {/* <GeoLocation /> */}
-      </ImageOverlay>
-      </ScrollView>
-
+            {/* <GeoLocation /> */}
+          </ImageOverlay>
+       
+      </SafeAreaView>
     </>
   );
 };
@@ -302,7 +312,7 @@ const styles = StyleSheet.create({
     // marginRight:23,
 
     // alignSelf:"center",
-    marginTop: hp("-12%"),
+    marginTop: hp("-15%"),
     // backgroundColor:'red',
     width: "100%",
     // margin:23,

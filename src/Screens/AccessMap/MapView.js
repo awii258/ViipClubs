@@ -7,39 +7,29 @@ import {
 } from "react-native";
 import React from "react";
 import MapView from "react-native-maps";
-import MapVip from "../Screens/MapVip";
+import MapAccess from "./MapAccess";
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
-const Map = ({ route }) => {
+const Map = ({ route, latitude, longitude }) => {
+  console.log("MapLongitude", longitude);
   // const {longitude, latitude, name, description} = route.params
-  const { itemLongitude, itemLatitude, itemName, itemDescription } =
-    route.params;
-  console.log(
-    "item description in map: ",
-    itemDescription,
-    itemLatitude,
-    itemLongitude
-  );
+  //   const {itemLongitude, itemLatitude, itemName, itemDescription} = route.params
+  //   console.log(
+  //     "item description in map: ",
+  //     itemDescription,
+  //     itemLatitude,
+  //     itemLongitude
+  //   );
   return (
     <SafeAreaView
-      style={{ flex: 1, borderTopWidth: 2, borderTopColor: "#927E5A" }}
-      forceInset={{ top: "always" }}
+    //  style={{ justifyContent:"center"}}
+    //  forceInset={{ top: "always" }}
     >
-      <MapVip
-        itemLong={itemLongitude}
-        itemLat={itemLatitude}
-        itemName={itemName}
-        itemDesc={itemDescription}
-      />
-      {/* <View style={{   marginLeft:wp("5%")}}>
-      <TouchableOpacity style={styles.buttonContainer}>
-      <Text style={styles.textStyle}>Get Directions</Text>
-      </TouchableOpacity>
-      </View> */}
+      <MapAccess latitude={latitude} longitude={longitude} />
     </SafeAreaView>
   );
 };
@@ -59,5 +49,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 5,
     backgroundColor: "#927E5A",
+  },
+  lineBreak: {
+    borderBottomColor: "#927E5A",
+    borderBottomWidth: 1,
+    width: 280,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
   },
 });

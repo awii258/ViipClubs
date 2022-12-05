@@ -16,6 +16,9 @@ import { Context as Actions } from "../Context/Actions";
 import FavoriteScreen from "../Screens/FavoriteScreen";
 import HeaderIcon from "../Components/HeaderIcon";
 import Images from "../Screens/Images"
+import Test from "../Screens/Test";
+import SubscriptionsMember from "../Screens/Subscriptions/SubscriptionsMember";
+
 
 import {
   View,
@@ -33,19 +36,20 @@ import { useNavigation } from "@react-navigation/native";
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
+
   React.useEffect(() => {
     onGetProfile();
     // console.log("hi");
   }, [onGetProfile]);
-  const { state, onGetProfile, Logout } = React.useContext(Actions);
   // console.log("...........12346.....>>>>>", state.user);
    const navigation = useNavigation();
+  const { state, onGetProfile, Logout } = React.useContext(Actions);
+
   return (
     <Tab.Navigator
       // tabBarOptions={{
       //   keyboardHidesTabBar: true,
       // }}
-      
 
       screenOptions={{
         // keyboardHidesTabBar: true,
@@ -128,9 +132,11 @@ const Tabs = () => {
         options={{
           tabBarShowLabel: false,
           // headerShown: false,
+          title:"Events",
           headerTintColor: "#927E5A",
           headerTitleAlign: "center",
           headerTitleStyle: {
+            
             color: "#927E5A",
             fontFamily: "BaskervilleRegular",
             textTransform: "uppercase",
@@ -159,30 +165,30 @@ const Tabs = () => {
                   margin: 5,
                 }}
                 resizeMode="contain"
-                source={require("../../assets/Image/bars.png")}
+                source={require("../../assets/Image/events1.png")}
               />
 
               <Text
                 style={{
                   color: focused ? "#927E5A" : "#FFFFFF",
                   alignItems: "center",
-                  fontSize: 11,
+                  fontSize: 10.5,
                   fontFamily: "OpenSansRegular",
                 }}
               >
-                Bars
+                Events
               </Text>
             </View>
           ),
         }}
       />
       <Tab.Screen
-        name="Favourites"
-        component={FavoriteScreen}
+        name="Queue Jump"
+        component={Qrcode}
         options={{
           tabBarShowLabel: false,
           // headerShown: false,
-          title: "Favourites",
+          title: "Queue Jump",
           headerTintColor: "#927E5A",
           headerTitleAlign: "center",
           headerTitleStyle: {
@@ -210,22 +216,23 @@ const Tabs = () => {
                 style={{
                   tintColor: focused ? "#927E5A" : "#FFFFFF",
                   height: 26.67,
-                  width: 24,
+                  width: 27,
                   margin: 5,
                 }}
                 resizeMode="contain"
-                source={require("../../assets/Image/favorites.png")}
+                source={require("../../assets/Image/vip_logo_icon.png")}
               />
 
               <Text
                 style={{
                   color: focused ? "#927E5A" : "#FFFFFF",
                   alignItems: "center",
-                  fontSize: 11,
+                  fontSize: 10.5,
                   fontFamily: "OpenSansRegular",
+                  marginBottom:2
                 }}
               >
-                Favourites
+                Queue Jump
               </Text>
             </View>
           ),
@@ -272,7 +279,7 @@ const Tabs = () => {
                 style={{
                   color: focused ? "#927E5A" : "#FFFFFF",
                   textAlign: "center",
-                  fontSize: 11,
+                  fontSize: 10.5,
                   fontFamily: "OpenSansRegular",
                 }}
               >
@@ -304,7 +311,6 @@ const Tabs = () => {
             borderTopWidth: 1,
             borderTopColor: "#927E5A",
             // justifyContent:"flex-end"
-            
           },
 
           headerRight: () => <HeaderIcon RIGHT={10} />,
@@ -323,18 +329,18 @@ const Tabs = () => {
                   margin: 5,
                 }}
                 resizeMode="contain"
-                source={require("../../assets/Image/home.png")}
+                source={require("../../assets/Image/profile.png")}
               />
 
               <Text
                 style={{
                   color: focused ? "#927E5A" : "#FFFFFF",
                   alignItems: "center",
-                  fontSize: 11,
+                  fontSize: 10.5,
                   fontFamily: "OpenSansRegular",
                 }}
               >
-                Home
+                Profile
               </Text>
             </View>
           ),

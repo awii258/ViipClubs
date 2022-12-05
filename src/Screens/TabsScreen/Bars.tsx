@@ -53,6 +53,9 @@ const Bars = ({ navigation, props }: AnimalProps) => {
 
   const { state, onAffiliate, clearOnProfile } = useContext(Actions);
   const [SearchTown, setSearchTown] = useState("");
+  if(state.pro.data.tier.name === "Free Membership"){
+    navigation.navigate("Subscription")
+  }
   const SearchTown_ = () => {
     // alert("search", search);
     // const tempSearch=search;
@@ -259,11 +262,14 @@ const Bars = ({ navigation, props }: AnimalProps) => {
     >
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 30,
-          alignSelf: "center",
+
+          paddingTop:30,
+          paddingBottom:30
+          // flexDirection: "row",
+          // justifyContent: "center",
+          // alignItems: "center",
+          // padding: 30,
+          // alignSelf: "center",
         }}
       >
         <View style={styles.inputView}>
@@ -352,7 +358,7 @@ export default Bars;
 const styles = StyleSheet.create({
   inputView: {
     flexDirection: "row",
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#B79D71",
   },
@@ -360,7 +366,7 @@ const styles = StyleSheet.create({
     fontFamily: "BaskervilleRegular",
     backgroundColor: "#B79D71",
     color: "#ffffff",
-    width: "95%",
+    width: "100%",
     height: 50,
     paddingLeft: 10,
   },

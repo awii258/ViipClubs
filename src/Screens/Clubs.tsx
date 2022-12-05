@@ -108,7 +108,7 @@ const Clubs = ({ navigation, route }: AnimalProps) => {
       onProfile("", "Club", productTitle);
     }
   }, [SearchAffiliate]);
-
+  console.log("hello>>>>>>>>>???????????????????", productTitle);
   let c = productId;
   // console.log(">>>??>>>????", productId);
   const b = state.users;
@@ -149,7 +149,7 @@ const Clubs = ({ navigation, route }: AnimalProps) => {
             itemCountry: item.country,
             itemRegion: item.region,
             itemAddress1: item.address1,
-            itemAddress2: item.address2
+            itemAddress2: item.address2,
           });
         }}
       >
@@ -212,7 +212,7 @@ const Clubs = ({ navigation, route }: AnimalProps) => {
                   itemCountry: item.country,
                   itemRegion: item.region,
                   itemAddress1: item.address1,
-                  itemAddress2: item.address2
+                  itemAddress2: item.address2,
                 });
               }}
             >
@@ -239,10 +239,12 @@ const Clubs = ({ navigation, route }: AnimalProps) => {
     >
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 30,
+          paddingTop: 30,
+          paddingBottom: 30,
+          // flexDirection: "row",
+          // justifyContent: "center",
+          // alignItems: "center",
+          // padding: 30,
         }}
       >
         <View>
@@ -302,16 +304,18 @@ const Clubs = ({ navigation, route }: AnimalProps) => {
           Clubs in {city}
         </Text>
       </View> */}
-      <ScrollView contentContainerStyle={{ paddingBottom: 200 }}
-        showsVerticalScrollIndicator={false}>
-      <FlatList
-        data={state?.users}
-        keyExtractor={(item, index) => item.id.toString()}
-        initialNumToRender={1}
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 200 }}
         showsVerticalScrollIndicator={false}
-        renderItem={renderItem}
-        // style={{ height: 500 }}
-      />
+      >
+        <FlatList
+          data={state?.users}
+          keyExtractor={(item, index) => item.id.toString()}
+          initialNumToRender={1}
+          showsVerticalScrollIndicator={false}
+          renderItem={renderItem}
+          // style={{ height: 500 }}
+        />
       </ScrollView>
     </View>
   );
@@ -321,7 +325,7 @@ export default Clubs;
 const styles = StyleSheet.create({
   inputView: {
     flexDirection: "row",
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#B79D71",
   },
@@ -329,7 +333,7 @@ const styles = StyleSheet.create({
     fontFamily: "BaskervilleRegular",
     backgroundColor: "#B79D71",
     color: "#ffffff",
-    width: "95%",
+    width: "100%",
     height: 50,
     paddingLeft: 10,
   },

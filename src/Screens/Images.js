@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image,Platform } from "react-native";
+import { StyleSheet, Text, View, Image, Platform } from "react-native";
 import React from "react";
 
 const Images = () => {
@@ -7,7 +7,7 @@ const Images = () => {
       <Text style={styles.text}>WELCOME TO </Text>
       <Image
         style={[styles.image, styles.imageHeight]}
-        source={require("../../../viiip/assets/Image/BE-VIP-logo.png")}
+        source={require("../../assets/Image/BE-VIP-logo.png")}
         resizeMode="contain"
       />
     </View>
@@ -23,15 +23,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     // backgroundColor:"red"
-    
   },
-
 
   image: {
     // flex:1,
     width: 100,
     // height: 60,
-    height:24,
+    height: 24,
     // backgroundColor:"red"
     // alignItems:"center",
     // justifyContent:"center"
@@ -43,13 +41,11 @@ const styles = StyleSheet.create({
 
   imageHeight: {
     ...Platform.select({
-      ios:{
-
+      ios: {},
+      android: {
+        height: 30,
       },
-      android:{
-        height: 30
-      }
-    })
+    }),
   },
 
   text: {

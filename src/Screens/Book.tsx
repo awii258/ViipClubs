@@ -5,19 +5,19 @@ import {
   View,
   ActivityIndicator,
 } from "react-native";
-import React, { useContext } from 'react'
+import React, { useContext } from "react";
 import { Context as Actions } from "../Context/Actions";
 import { WebView } from "react-native-webview";
 
-const Book = ({route}) => {
+const Book = ({ route }) => {
   const Spinner = () => (
     <View style={styles.activityContainer}>
       <ActivityIndicator size="large" color={"white"} />
     </View>
   );
 
-  const {itemWebsite} = route.params
-  console.log("Showing website in book venue: ", itemWebsite)
+  const { itemWebsite } = route.params;
+  console.log("Showing website in book venue: ", itemWebsite);
   const { state, onProfile, Logout, onClub } = useContext(Actions);
   // const g = state.club;
   return (
@@ -37,16 +37,15 @@ const Book = ({route}) => {
       />
     </SafeAreaView>
   );
-}
+};
 
-export default Book
+export default Book;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-   
   },
   activityContainer: {
     alignItems: "center",

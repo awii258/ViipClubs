@@ -14,7 +14,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
- 
   ImageBackground,
   TextInput,
   Alert,
@@ -49,13 +48,13 @@ const Dummy = ({ navigation, route }: AnimalProps) => {
   // console.log("................>>>>>", state.users);
   //   setData(state.users)
 
-  const SearchAffiliate_ =()=>{
-   // alert("search", search);
-   // const tempSearch=search;
-   onProfile(SearchAffiliate);
-  //  console.log("Search=====================================================search", SearchAffiliate);
-  }
-//  console.log("Filtered Affiliates ==========================================", state.users);
+  const SearchAffiliate_ = () => {
+    // alert("search", search);
+    // const tempSearch=search;
+    onProfile(SearchAffiliate);
+    //  console.log("Search=====================================================search", SearchAffiliate);
+  };
+  //  console.log("Filtered Affiliates ==========================================", state.users);
   //   const get = async () => {
   //     let token = await AsyncStorage.getItem("token");
   //     try {
@@ -85,9 +84,6 @@ const Dummy = ({ navigation, route }: AnimalProps) => {
     // console.log("hi");
   }, []);
 
-    
-  
-
   let c = productId;
   // console.log(">>>??>>>????", productId);
   const b = state.users;
@@ -97,8 +93,6 @@ const Dummy = ({ navigation, route }: AnimalProps) => {
   //   console.log("awaizsdf", data);
   //  console.log('akdjflksdjflkdsjflksd',)
 
-  
-
   // const [masterDataSource, setMasterDataSource] = useState("");
   //   let a = search.charAt(0).toUpperCase() + search.slice(1);
   //   let filteredDataSource = masterDataSource.filter(
@@ -107,9 +101,7 @@ const Dummy = ({ navigation, route }: AnimalProps) => {
 
   // 👆 do this instead of creating new state:
 
-  
   const renderItem = ({ item }: any) => {
-
     // console.log("hilllstatution", item.id);
     return (
       <TouchableOpacity
@@ -144,8 +136,8 @@ const Dummy = ({ navigation, route }: AnimalProps) => {
                   textAlign: "justify",
                   marginTop: 30,
                   marginLeft: 20,
-                  fontFamily:"BaskervilleRegular",
-              textTransform:"uppercase"   
+                  fontFamily: "BaskervilleRegular",
+                  textTransform: "uppercase",
                 }}
                 selectable={true}
               >
@@ -166,7 +158,7 @@ const Dummy = ({ navigation, route }: AnimalProps) => {
                     backgroundColor: "#927E5A",
                     alignItems: "center",
                     justifyContent: "center",
-                    borderRadius:5
+                    borderRadius: 5,
                   }}
                   onPress={() => {
                     navigation.navigate("Du", {
@@ -177,7 +169,12 @@ const Dummy = ({ navigation, route }: AnimalProps) => {
                     });
                   }}
                 >
-                  <Text style={{ color: "#000000",  fontFamily:"OpenSansRegular", }}> View</Text>
+                  <Text
+                    style={{ color: "#000000", fontFamily: "OpenSansRegular" }}
+                  >
+                    {" "}
+                    View
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -259,8 +256,15 @@ const Dummy = ({ navigation, route }: AnimalProps) => {
       </View>
 
       <View style={{ marginLeft: 10 }}>
-        <Text style={{ color: "#927E5A", fontSize: 20, fontWeight: "600",  fontFamily:"BaskervilleRegular",
-              textTransform:"uppercase"    }}>
+        <Text
+          style={{
+            color: "#927E5A",
+            fontSize: 20,
+            fontWeight: "600",
+            fontFamily: "BaskervilleRegular",
+            textTransform: "uppercase",
+          }}
+        >
           {" "}
           Clubs in {city}
         </Text>
@@ -301,7 +305,7 @@ const styles = StyleSheet.create({
     paddingLeft: 0,
     marginLeft: 10,
     borderTopLeftRadius: 50,
-    fontFamily:"OpenSansRegular",
+    fontFamily: "OpenSansRegular",
     backgroundColor: "#B79D71",
     color: "#424242",
   },

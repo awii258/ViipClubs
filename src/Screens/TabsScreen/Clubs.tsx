@@ -18,6 +18,7 @@ import {
 } from "react-native-responsive-screen";
 import { Context as Actions } from "../../Context/Actions";
 import {useNavigation} from '@react-navigation/native'
+// import ImageOverlay from "react-native-image-overlay";
 import ImageOverlay from "react-native-image-overlay";
 const data = [
   {
@@ -52,7 +53,9 @@ const Clubs = () => {
     // console.log("subhan hi", item.name);
 
     return (
-      <TouchableOpacity style={styles.imageContainer} onPress={() => navigation.navigate("Competition Detail", {
+
+      
+        <TouchableOpacity style={styles.imageContainer} onPress={() => navigation.navigate("Competition Detail", {
         image: item.image,
         title: item.title,
         content: item.content,
@@ -65,14 +68,16 @@ const Clubs = () => {
           barStyle="light-content"
         />
         <ImageOverlay
+         
           overlayColor="#000000"
           //  "#19282F"
           overlayAlpha={0.8}
           source={{ uri: item.image }}
           containerStyle={styles.imageStyle}
           resizeMode="cover"
+          
         >
-          <View style={{ padding: 20, alignSelf: "center" }}>
+          <View style={{ padding: 10, alignSelf: "center" }}>
             <Text
               style={[
                 styles.textStyle,
@@ -85,15 +90,22 @@ const Clubs = () => {
               {item.content}
             </Text>
           </View>
+
         </ImageOverlay>
+
       </TouchableOpacity>
+     
+
+      
     );
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <View style={styles.inputView}>
+
+      
+      <View style={{paddingTop:30, paddingBottom:30}}>
+      <View style={styles.inputView}>
           <EvilIcons
             name="search"
             size={24}
@@ -111,6 +123,10 @@ const Clubs = () => {
           ></TextInput>
         </View>
       </View>
+      
+     
+        
+      
       {/* <KeyboardAvoidingView enabled={true}
     behavior={Platform.OS === "ios" ? "padding" : "height"}
     style={{ flex: 1 }}>
@@ -151,7 +167,7 @@ const styles = StyleSheet.create({
     // paddingBottom:25,
     // margin:0,
     // marginRight:"1%",
-    // width: wp("100%"),
+    // width: wp("93%"),
     // // margin:"auto",
     alignSelf: "center",
   },
@@ -161,16 +177,33 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   imageContainer: {
-    alignSelf: "center",
-    margin: 10,
+    // alignItems:"center",
+    // margin: 10,
+    
+    // paddingRight:40,
+    // margin:0,
+    // margin:0,
+    
+    width:"100%"
+    // height:360,
+    // width: wp("100%"),
+    // backgroundColor:"red",
+    // height:260
+
   },
   imageStyle: {
-    height: 262,
-    width: wp("93%"),
+    height: 290,
+    // width:"auto"
+    
+    width:"100%"
+    // width: wp("93%"),
+    // margin:0,
+    // padding:30
   },
   inputView: {
+    
     flexDirection: "row",
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#B79D71",
   },
@@ -178,7 +211,7 @@ const styles = StyleSheet.create({
     fontFamily: "BaskervilleRegular",
     backgroundColor: "#B79D71",
     color: "#424242",
-    width: "95%",
+    width: "100%",
     height: 50,
     paddingLeft: 10,
   },

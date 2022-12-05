@@ -50,7 +50,6 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const { state, onSignin, err, onForgot } = useContext(GG);
   const { msg } = state;
   const [email, setEmail] = useState("");
- 
 
   useEffect(() => {
     const getLastUsedEmail = async () => {
@@ -66,17 +65,16 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
     };
     getLastUsedEmail();
   });
- 
 
   // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
   // if(err.Error){
   //   console.log(".......>>>>>>>>>>>>>>>")
   //   Alert.alert("msg",state.msg)
   // }
-const ForgetPassword = ()=>{
-onForgot({ email });
-navigation.navigate("Forgets");
-}
+  const ForgetPassword = () => {
+    onForgot({ email });
+    navigation.navigate("Forgets");
+  };
   return (
     <>
       <StatusBar
@@ -120,10 +118,7 @@ navigation.navigate("Forgets");
 
             <TouchableOpacity
               style={styles.buttonStyle}
-              onPress={
-                
-            ForgetPassword
-}
+              onPress={ForgetPassword}
             >
               <Text style={[styles.textStyle, { color: "#FFFFFF" }]}>
                 Recover My Password

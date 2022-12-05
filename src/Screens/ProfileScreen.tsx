@@ -8,19 +8,22 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
-  KeyboardAvoidingView
-
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons"; 
-import SelectList from 'react-native-dropdown-select-list'
+import { MaterialIcons } from "@expo/vector-icons";
+import SelectList from "react-native-dropdown-select-list";
 import DatePicker from "react-native-datepicker";
 import { Picker } from "@react-native-picker/picker";
 import DocumentPicker from "react-native-document-picker";
-
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+// import DateTimePicker from '@react-native-community/datetimepicker';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import axios from "axios";
 import React, { useState, useContext, useEffect } from "react";
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome } from "@expo/vector-icons";
 import { Context as Actions } from "../Context/Actions";
 import {
   createNativeStackNavigator,
@@ -29,6 +32,7 @@ import {
 import DropDownPicker from "react-native-dropdown-picker";
 import * as SecureStore from "expo-secure-store";
 import * as ImagePicker from "expo-image-picker";
+import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePickerExample from "../Components/ImagePicker";
 type Stack = {
   Login: undefined;
@@ -53,36 +57,62 @@ type LoginScreenProps = {
 //   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9iZS12aXAtc2VydmljZS1zbHh1cy5vbmRpZ2l0YWxvY2Vhbi5hcHBcL2FwaVwvZXh0ZXJuYWxcL2F1dGhcL2xvZ2luIiwiaWF0IjoxNjUwNDUwNjQwLCJleHAiOjE2NTA0NTQyNDAsIm5iZiI6MTY1MDQ1MDY0MCwianRpIjoiVUpWaFNlYU45NFBqM3dkaiIsInN1YiI6MywicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.bZzhRAyVDVKmXAKdAHz7_VKFOW5EqbsAvR4BEMFEtUM";
 const ProfileScreen = ({ navigation }: LoginScreenProps) => {
   const [selected, setSelected] = React.useState("");
-  
-  const data = [
-    {value:'Monthly competitions'},
-    {value:'Auto enlisted into competetions'},
-    {value:'Even Sign up for free gets access to competitions'}
-  ];
 
   useEffect(() => {
     onGetProfile();
     // console.log("hi");
   }, [onGetProfile]);
-  const { state, onGetProfile,Logout,onUpdate,onUpdateImage,LoadToken } = useContext(Actions);
+  const { state, onGetProfile, Logout, onUpdate, onUpdateImage, LoadToken } =
+    useContext(Actions);
   // console.log("................>>>>>", state.user);
-  
 
   const [first, setFirst] = useState(state.user?.data.first_name);
-  const [destination,setDestination] =useState(state.user?.data.destination);
+  const [destination, setDestination] = useState(state.user?.data.destination);
   const [last, setLast] = useState(state.user?.data.last_name);
-  const [location,setLocation] = useState(state.user?.data.location);
+  const [location, setLocation] = useState(state.user?.data.location);
   const [users, setUsers] = useState([]);
   const [checked, setChecked] = useState(false);
   const [date, setDate] = useState(state.user?.data.date_of_birth);
-    const [email, setEmail] = useState(state.user?.data.email);
+  const [email, setEmail] = useState(state.user?.data.email);
   const [male, setMale] = useState(true);
   const [female, setFemale] = useState(false);
-  const[encodedImage, setEncodedImage] = useState<any>()
+  const [encodedImage, setEncodedImage] = useState<any>();
+  const [date1, setDate1] = useState(new Date(1598051730000));
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShow(false);
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode: React.SetStateAction<string>) => {
+    if (Platform.OS === 'android') {
+      setShow(false);
+      // for iOS, add a button that closes the picker
+    }
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
+
+  console.log("hello awaiz how are you", state.user?.data.last_name);
+  const data = [
+    { value: `${state.user?.data.destination}` },
+    { value: "destination" },
+    { value: "destination" },
+  ];
 
   // console.log("********************************** dropdown destination", destination);
 
- const [singleFile, setSingleFile] = useState(null);
+  const [singleFile, setSingleFile] = useState(null);
   const uploadImage = async () => {
     // Check if any file is selected or not
     if (singleFile != null) {
@@ -104,199 +134,187 @@ const ProfileScreen = ({ navigation }: LoginScreenProps) => {
       );
       let responseJson = await res.json();
       if (responseJson.status == 1) {
-       Alert.alert("Upload Successful");
+        Alert.alert("Upload Successful");
       }
     } else {
       // If no file selected the show alert
-     Alert.alert("Please Select File first");
+      Alert.alert("Please Select File first");
     }
   };
- const selectFile = async () => {
-   // Opening Document Picker to select one file
-   try {
-     const res = await DocumentPicker.pick({
-       // Provide which type of file you want user to pick
-       type: [DocumentPicker.types.allFiles],
-       // There can me more options as well
-       // DocumentPicker.types.allFiles
-       // DocumentPicker.types.images
-       // DocumentPicker.types.plainText
-       // DocumentPicker.types.audio
-       // DocumentPicker.types.pdf
-     });
-     // Printing the log realted to the file
-    //  console.log("res : " + JSON.stringify(res));
-     // Setting the state to show single file attributes
-     setSingleFile(res);
-   } catch (err) {
-     setSingleFile(null);
-     // Handling any exception (If any)
-     if (DocumentPicker.isCancel(err)) {
-       // If user canceled the document selection
-       Alert.alert("Canceled");
-     } else {
-       // For Unknown Error
-       Alert.alert("Unknown Error: " + JSON.stringify(err));
-       throw err;
-     }
-   }
- };
-  // const { state, onLogout } = useContext(GG);
-
-const a = (ab:any)=>{
-
-  if(ab=="male"){
-    setMale(true);
-    setFemale(false);
-  }
-  if(ab=="female"){
-    setMale(false);
-    setFemale(true);
-  }
-
-}
-
-const [image, setImage] = useState("");
-
-useEffect(() => {
-  (async () => {
-    if (Platform.OS !== "web") {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== "granted") {
-        alert("Sorry, we need camera roll permissions to make this work!");
+  const selectFile = async () => {
+    // Opening Document Picker to select one file
+    try {
+      const res = await DocumentPicker.pick({
+        // Provide which type of file you want user to pick
+        type: [DocumentPicker.types.allFiles],
+        // There can me more options as well
+        // DocumentPicker.types.allFiles
+        // DocumentPicker.types.images
+        // DocumentPicker.types.plainText
+        // DocumentPicker.types.audio
+        // DocumentPicker.types.pdf
+      });
+      // Printing the log realted to the file
+      //  console.log("res : " + JSON.stringify(res));
+      // Setting the state to show single file attributes
+      setSingleFile(res);
+    } catch (err) {
+      setSingleFile(null);
+      // Handling any exception (If any)
+      if (DocumentPicker.isCancel(err)) {
+        // If user canceled the document selection
+        Alert.alert("Canceled");
+      } else {
+        // For Unknown Error
+        Alert.alert("Unknown Error: " + JSON.stringify(err));
+        throw err;
       }
     }
-  })();
-}, []);
+  };
+  // const { state, onLogout } = useContext(GG);
 
-const pickImage = async () => {
-  // console.log("inside pic image")
-  let result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.All,
-    allowsEditing: true,
-    aspect: [4, 3],
-    quality: 1,
-    // base64: true
-  });
+  const a = (ab: any) => {
+    if (ab == "male") {
+      setMale(true);
+      setFemale(false);
+    }
+    if (ab == "female") {
+      setMale(false);
+      setFemale(true);
+    }
+  };
 
-  // console.log("Showing result of image: ",result);
+  const [image, setImage] = useState("");
 
-  // console.log("just outside if")
-  if (!result.cancelled) {
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to make this work!");
+        }
+      }
+    })();
+  }, []);
 
-    // console.log('>>>>>>>>>>inside if>>>>>>>>>>>')
-    // try{
-    //   // ImagePicker saves the taken photo to disk and returns a local URI to it
-    //   let localUri = result.uri;
-    //   let filename_ = localUri.split("/").pop();
+  const pickImage = async () => {
+    // console.log("inside pic image")
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      // base64: true
+    });
 
-    //   // Infer the type of the image
-    //   let match = /\.(\w+)$/.exec(filename_);
-    //   let type = match ? `image/${match[1]}` : `image`;
+    // console.log("Showing result of image: ",result);
 
-    //   // Upload the image using the fetch and FormData APIs
-    //   let formData = new FormData();
-    //   // Assume "photo" is the name of the form field the server expects
-    //   formData.append("image", { uri: localUri, name: filename_, type });
+    // console.log("just outside if")
+    if (!result.cancelled) {
+      // console.log('>>>>>>>>>>inside if>>>>>>>>>>>')
+      // try{
+      //   // ImagePicker saves the taken photo to disk and returns a local URI to it
+      //   let localUri = result.uri;
+      //   let filename_ = localUri.split("/").pop();
 
-    //     let res = await fetch(
-    //       "https://be-vip-service-slxus.ondigitalocean.app/api/external/auth/image",
-    //       {
-    //         method: "post",
-    //         body: formData,
-    //         headers: {
-    //           Accept: "application/json",
-    //           "Content-Type": "multipart/form-data",
-    //         },
-    //       }
-    //     );
-    //    console.log("successfully upload image: ", res)
-    // }catch(error){
-    //   console.log("Could not upload image: ", error)
-    // }
-    // console.log(">>>>>>>>>>>>>>>>>> outside try block >>>>>>>>>>>>>>>>>")
-    setImage(result.uri);
-    
-    // const formBody = new FormData()
-    // formBody.append("image", blob)
-    // try{
-    //   let res = await fetch(
-    //     "https://be-vip-service-slxus.ondigitalocean.app/api/external/auth/image",
-    //     {
-    //       method: "post",
-    //       body: formBody,
-    //       headers: {
-    //         "Accept": "application/json",
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //     }
-    //   );
-    //  console.log("successfully upload image: ", res)
-    // }catch(error){
-    //   console.log("could not upload image: ", error)
+      //   // Infer the type of the image
+      //   let match = /\.(\w+)$/.exec(filename_);
+      //   let type = match ? `image/${match[1]}` : `image`;
 
-    // }
+      //   // Upload the image using the fetch and FormData APIs
+      //   let formData = new FormData();
+      //   // Assume "photo" is the name of the form field the server expects
+      //   formData.append("image", { uri: localUri, name: filename_, type });
 
-     
+      //     let res = await fetch(
+      //       "https://be-vip-service-slxus.ondigitalocean.app/api/external/auth/image",
+      //       {
+      //         method: "post",
+      //         body: formData,
+      //         headers: {
+      //           Accept: "application/json",
+      //           "Content-Type": "multipart/form-data",
+      //         },
+      //       }
+      //     );
+      //    console.log("successfully upload image: ", res)
+      // }catch(error){
+      //   console.log("Could not upload image: ", error)
+      // }
+      // console.log(">>>>>>>>>>>>>>>>>> outside try block >>>>>>>>>>>>>>>>>")
+      setImage(result.uri);
 
-  }
-};
+      // const formBody = new FormData()
+      // formBody.append("image", blob)
+      // try{
+      //   let res = await fetch(
+      //     "https://be-vip-service-slxus.ondigitalocean.app/api/external/auth/image",
+      //     {
+      //       method: "post",
+      //       body: formBody,
+      //       headers: {
+      //         "Accept": "application/json",
+      //         "Content-Type": "multipart/form-data",
+      //       },
+      //     }
+      //   );
+      //  console.log("successfully upload image: ", res)
+      // }catch(error){
+      //   console.log("could not upload image: ", error)
 
- const updateImage = async (image)=>{
-  // console.log("inside update image function")
-  // console.log("image uri: ", image)
-  try{
-    let localUri = image;
-    let filename = localUri.split("/").pop();
+      // }
+    }
+  };
 
-    // Infer the type of the image
-    let match = /\.(\w+)$/.exec(filename);
-    let type = match ? `image/${match[1]}` : `image`;
-    // Upload the image using the fetch and FormData APIs
-    let formData = new FormData();
-    // Assume "photo" is the name of the form field the server expects
-    formData.append("image", { uri: localUri, name: filename, type });
-    // console.log("Successfully stored in formdata: ", formData);
-    onUpdateImage(formData);
-    // let res = await fetch(
-    //   "https://be-vip-service-slxus.ondigitalocean.app/api/external/auth/image",
-    //   {
-    //     method: "POST",
-    //     body: formData,
-    //     headers: {
-    //       Accept: "application/json",
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   }
-    // );
+  const updateImage = async (image) => {
+    // console.log("inside update image function")
+    // console.log("image uri: ", image)
+    try {
+      let localUri = image;
+      let filename = localUri.split("/").pop();
 
-    // console.log("After Successfully updated image: ", res)
+      // Infer the type of the image
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+      // Upload the image using the fetch and FormData APIs
+      let formData = new FormData();
+      // Assume "photo" is the name of the form field the server expects
+      formData.append("image", { uri: localUri, name: filename, type });
+      // console.log("Successfully stored in formdata: ", formData);
+      onUpdateImage(formData);
+      // let res = await fetch(
+      //   "https://be-vip-service-slxus.ondigitalocean.app/api/external/auth/image",
+      //   {
+      //     method: "POST",
+      //     body: formData,
+      //     headers: {
+      //       Accept: "application/json",
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   }
+      // );
 
+      // console.log("After Successfully updated image: ", res)
+    } catch (error) {
+      console.log("could not create blob: ", error);
+    }
+  };
 
-  }catch(error){
-    console.log("could not create blob: ", error)
-  }
-  
-  
- }
+  useEffect(() => {
+    if (image) {
+      // console.log("image changes")
+      updateImage(image);
+    }
+  }, [image]);
 
- useEffect(()=>{
-  if(image){
-    // console.log("image changes")
-    updateImage(image)
-  }
- },[image])
-
-
-
-const LogoutHandler = () => {
-  // console.log("inside logout handler >>>>>>>>>>>>>>>>>>");
-  Logout();
-  LoadToken("xyz");
-  navigation.navigate("Home");
-  // console.log("End of logout handler >>>>>>>>>>>>>>>>>>>");
-};
+  const LogoutHandler = () => {
+    // console.log("inside logout handler >>>>>>>>>>>>>>>>>>");
+    Logout();
+    LoadToken("xyz");
+    navigation.navigate("Home");
+    // console.log("End of logout handler >>>>>>>>>>>>>>>>>>>");
+  };
 
   return (
     <>
@@ -359,7 +377,6 @@ const LogoutHandler = () => {
             </View>
 
             <View>
-              {/* <Text style={{ backgroundColor: "white", fontSize: 30 }}>Awaiz</Text> */}
               <Text
                 style={{
                   color: "#927E5A",
@@ -416,7 +433,9 @@ const LogoutHandler = () => {
               DOB
             </Text>
             <View style={styles.input}>
-              {/* <Text style={{ backgroundColor: "white", fontSize: 30 }}>Awaiz</Text> */}
+           
+       
+   
 
               <DatePicker
                 style={styles.datePickerStyle}
@@ -434,12 +453,12 @@ const LogoutHandler = () => {
                     size={24}
                     color="#927E5A"
                     style={{
-                      flex:1,
+                      flex: 1,
                       // flexDirection:"row",
                       // backgroundColor:"yellow",
-                      alignSelf:"flex-start",
-                      textAlign:"right",
-                      marginRight:20
+                      alignSelf: "flex-start",
+                      textAlign: "right",
+                      marginRight: 20,
                       // justifyContent:"flex-end"
                       // position: "absolute",
                       // right: wp("5%"),
@@ -521,9 +540,9 @@ const LogoutHandler = () => {
             <View style={{ marginTop: 10 }}>
               <SelectList
                 // onSelect={() => alert(selected)}
-                placeholder="Favourite Jet2 Destination"
+                placeholder={`${state.user?.data.destination}`}
                 inputStyles={{ color: "#927E5A" }}
-                setSelected={setDestination}
+                setSelected={`${state.user?.data.destination}`}
                 data={data}
                 arrowicon={
                   <FontAwesome
@@ -651,7 +670,7 @@ const styles = StyleSheet.create({
     margin: 15,
     height: 51,
     borderColor: "#927E5A",
-    fontFamily:"OpenSansRegular",
+    fontFamily: "OpenSansRegular",
     padding: 10,
     color: "#927E5A",
     borderWidth: 1,
@@ -659,25 +678,22 @@ const styles = StyleSheet.create({
     backgroundColor: "#080402",
     // backgroundColor:"yellow",
   },
-  textStyle:{
-    color:"#927E5A",
-    fontFamily:"OpenSansRegular",
-    fontSize:16,
-
+  textStyle: {
+    color: "#927E5A",
+    fontFamily: "OpenSansRegular",
+    fontSize: 16,
   },
-  textImageContainer:
-  { 
+  textImageContainer: {
     flexDirection: "row",
-     justifyContent:"space-between",
-      margin:30
-    },
-  imageContainer:
-  {
+    justifyContent: "space-between",
+    margin: 30,
+  },
+  imageContainer: {
     width: 118,
     height: 118,
     borderRadius: 8,
-    borderWidth:1,
-    borderColor:"#927E5A",
+    borderWidth: 1,
+    borderColor: "#927E5A",
   },
   buttonDesign: {
     backgroundColor: "#080402",
@@ -685,10 +701,10 @@ const styles = StyleSheet.create({
     height: 51,
     justifyContent: "center",
     alignSelf: "center",
-    alignItems:"center",
+    alignItems: "center",
     borderColor: "#927E5A",
     borderWidth: 1,
-    borderRadius:5
+    borderRadius: 5,
   },
   exit: {
     alignSelf: "center",

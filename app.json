@@ -2,11 +2,22 @@
   "expo": {
     "name": "Be VIP",
     "slug": "be-vip",
-    "version": "5.0.0",
+    "version": "6.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    
+    "userInterfaceStyle": "automatic",
+     "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to  you upload  profile picture."
+        }
+      ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0
+     
     },
     "assetBundlePatterns": [
       "**/*"
@@ -15,6 +26,14 @@
       "supportsTablet": true,
       "config": {
         "googleMapsApiKey": "AIzaSyCQKlJb2UoVNRuh8MHoQWypnP1W4Tzq1jw"
+      },
+      "bundleIdentifier": "com.awii.vip",
+     
+      "buildNumber": "2.3",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to scan barcodes on event tickets.",
+        "NSPhotoLibraryAddUsageDescription": "This app requires access to the photo library so that users can upload their profile picture.",
+        "NSPhotoLibraryUsageDescription": "This app requires access to the photo library so that users can upload their profile picture."
       }
     },
     "platforms": [

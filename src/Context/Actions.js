@@ -792,6 +792,57 @@ const onFavProfile =
 const clearFavProfile = (dispatch) => () => {
   dispatch({ type: "clearFavProfile", payload: null })
 }
+const onTest =
+  (dispatch) =>
+  async (type = "", town = "") => {
+    console.log("town", town);
+    // console.log("hiiiiiiiiiii",city);
+    //  try {
+    //    console.log('jjjjjjjjjjjj')
+    //    // setting up multiget
+    //    // userToken = await AsyncStorage.multiGet(['userToken', 'userRef']);
+    //    userToken = await AsyncStorage.getItem("token");
+    //    console.log("mytoken???????????",userToken)
+    //    return userToken;
+
+    //  } catch (e) {
+    //    console.log(kkkkkkkkkkk)
+    //    console.log(e)
+    //    // Restoring token failed
+    //  }
+
+    let call = await AsyncStorage.getItem("id");
+    // console.log("hilllkillllkill",call)
+
+    // let token = await AsyncStorage.getItem("token");
+    const { access_token: token } = await getCredentials();
+
+    // console.log(".....................,mm,m", token);
+
+    try {
+      // console.log("skdfjksdjfsdjfkds");
+      const response = await fetch(
+        `https://be-vip-service-slxus.ondigitalocean.app/api/external/affiliates?town=${town}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer" + token,
+          },
+        }
+      );
+      const data = await response.json();
+
+      // console.log("alkjdfklasdjf??????????",);
+      const currentsss = data.data;
+      // const Curren = Object.assign({}, data.data);
+      dispatch({ type: "ONTEST", payload: currentsss });
+      console.log("hellllllllllllllllllll???????????????", currentsss);
+    } catch (err) {
+      console.log("hello", err);
+    }
+  };
 
 export const { Provider, Context } = DataContext(
   AuthReducer,
@@ -823,6 +874,7 @@ export const { Provider, Context } = DataContext(
     clearOnProfile,
     onFavProfile,
     clearFavProfile,
+    onTest,
   },
   { token: null, msg: null }
 );

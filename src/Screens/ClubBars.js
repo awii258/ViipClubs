@@ -15,7 +15,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-
   ImageBackground,
   TextInput,
   Alert,
@@ -28,14 +27,14 @@ import {
 } from "@react-navigation/native";
 
 type Stack = {
-  YourSelf: undefined;
-  home: undefined;
-  notification: undefined;
-  Person: undefined;
-  Days: undefined;
-  Animal: undefined;
-  Forget: undefined;
-  Du: undefined;
+  YourSelf: undefined,
+  home: undefined,
+  notification: undefined,
+  Person: undefined,
+  Days: undefined,
+  Animal: undefined,
+  Forget: undefined,
+  Du: undefined,
 };
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
@@ -51,9 +50,11 @@ import { ScrollView } from "react-native-gesture-handler";
 const ClubBars = ({ navigation, route }) => {
   const { productId, productTitle } = route.params;
   // const [data, setData] = useState([]);
+
+  const { state, onProfile, clearClub, clearEventsByClub, clearEventsByTowns } =
+    useContext(Actions);
   const [SearchAffiliate, setSearchAffiliate] = useState("");
 
-  const { state, onProfile, clearClub, clearEventsByClub, clearEventsByTowns } = useContext(Actions);
   // console.log("................>>>>>", state.users);
   //   setData(state.users)
 
@@ -62,7 +63,7 @@ const ClubBars = ({ navigation, route }) => {
     // const tempSearch=search;
     onProfile(SearchAffiliate, "Bar", productTitle);
     //  console.log("Search=====================================================search", SearchAffiliate);
-  }
+  };
   //  console.log("Filtered Affiliates ==========================================", state.users);
   //   const get = async () => {
   //     let token = await AsyncStorage.getItem("token");
@@ -95,14 +96,10 @@ const ClubBars = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    if (SearchAffiliate === '') {
+    if (SearchAffiliate === "") {
       onProfile(SearchAffiliate, "Bar", productTitle);
-
     }
   }, [SearchAffiliate]);
-
-
-
 
   let c = productId;
   // console.log(">>>??>>>????", productId);
@@ -112,8 +109,6 @@ const ClubBars = ({ navigation, route }) => {
   // const a = b && b?.filter((el, i) => el.town == city);
   //   console.log("awaizsdf", data);
   //  console.log('akdjflksdjflkdsjflksd',)
-
-
 
   // const [masterDataSource, setMasterDataSource] = useState("");
   //   let a = search.charAt(0).toUpperCase() + search.slice(1);
@@ -133,9 +128,7 @@ const ClubBars = ({ navigation, route }) => {
     }, [])
   );
 
-
   const renderItem = ({ item }: any) => {
-
     // console.log("hilllstatution", item.id);
     return (
       <TouchableOpacity
@@ -156,7 +149,7 @@ const ClubBars = ({ navigation, route }) => {
             itemCountry: item.country,
             itemRegion: item.region,
             itemAddress1: item.address1,
-            itemAddress2: item.address2
+            itemAddress2: item.address2,
           });
         }}
       >
@@ -215,7 +208,7 @@ const ClubBars = ({ navigation, route }) => {
                   itemCountry: item.country,
                   itemRegion: item.region,
                   itemAddress1: item.address1,
-                  itemAddress2: item.address2
+                  itemAddress2: item.address2,
                 });
               }}
             >
@@ -242,13 +235,14 @@ const ClubBars = ({ navigation, route }) => {
     >
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 30,
+          // flexDirection: "row",
+          // justifyContent: "center",
+          // alignItems: "center",
+          // padding: 30,
           // margin:0,
           // marginRight: 10,
-
+          paddingTop: 30,
+          paddingBottom: 30,
           // alignSelf: "center",
         }}
       >
@@ -261,7 +255,7 @@ const ClubBars = ({ navigation, route }) => {
           />
           <TextInput
             style={styles.inputDesign}
-            placeholder="SEARCH BARS"
+            placeholder="SEARCH EVENTS"
             placeholderTextColor="#ffffff"
             autoCapitalize={"words"}
             selectionColor="#ffffff"
@@ -308,18 +302,19 @@ const ClubBars = ({ navigation, route }) => {
         </Text>
       </View> */}
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 200 }}
-        showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 200 }}
+        showsVerticalScrollIndicator={false}
+      >
         <FlatList
           data={state?.users}
           keyExtractor={(item, index) => item.id.toString()}
           initialNumToRender={1}
           showsVerticalScrollIndicator={false}
           renderItem={renderItem}
-        // style={{ height: 500 }}
+          // style={{ height: 500 }}
         />
       </ScrollView>
-
     </View>
   );
 };
@@ -328,11 +323,11 @@ export default ClubBars;
 const styles = StyleSheet.create({
   inputView: {
     flexDirection: "row",
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#B79D71",
 
-    width: 365,
+    // width: 365,
     height: 50,
   },
   iconDesign: {

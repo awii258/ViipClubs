@@ -6,10 +6,12 @@ import {
   Image,
   TouchableOpacity,
   StatusBar,
-  Linking
+  Linking,
+  Platform,
+  Share,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import { Context as Actions } from "../Context/Actions";
 import { Foundation } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -17,37 +19,52 @@ import { Entypo } from "@expo/vector-icons";
 import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
 import AppLoading from "expo-app-loading";
 import { NavigationContainer } from "@react-navigation/native";
-import { useNavigation, CommonActions, useFocusEffect } from "@react-navigation/native";
+import {
+  useNavigation,
+  CommonActions,
+  useFocusEffect,
+} from "@react-navigation/native";
 import PromotionScreen from "../Components/PromotionScreen";
-import { AntDesign } from '@expo/vector-icons';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { AntDesign } from "@expo/vector-icons";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import { AffiliateService } from "../api/AffiliateService";
 import { SliderBox } from "react-native-image-slider-box";
 import ClubsPromotionProfile from "../Components/ClubsPromotionProfile";
-import Constants from 'expo-constants';
+
+import Constants from "expo-constants";
+// import Share from "react-native-share";
+// const url = "https://awesome.contents.com/";
+// const title = "Awesome Contents";
+// const message = "Please check this out.";
+
+// const options = {
+//   title,
+//   url,
+//   message,
+// };
 
 const ClubsProfile = ({ route }) => {
-
-  // usePreventScreenCapture();
-  const navigation = useNavigation();
-  let [fontLoaded, error] = useFonts({
-    Inter_900Black,
-    "Baskervville-Regular": require("../../assets/fonts/Baskervville-Regular.ttf"),
-    "OpenSans-SemiBold": require("../../assets/fonts/OpenSans-SemiBold.ttf"),
-
-    "Inter-Regular": require("../../assets/fonts/Inter-Regular.ttf"),
-    "InterRegular": require("../../assets/fonts/Inter-Regular.ttf"),
-
-    "OpenSans-Regular": require("../../assets/fonts/OpenSans-Regular.ttf"),
-    "OpenSansRegular": require("../../assets/fonts/OpenSans-Regular.ttf"),
-  });
-
-  // if (!fontLoaded) {
-  //   return <AppLoading />;
-  // }
-
-  const { itemId, itemname, itemDescription, itemImages, itemSaved, itemPhone, itemEmail, itemWebsite, itemPostCode, itemCountry, itemRegion, itemAddress1, itemAddress2, itemlong, itemlat } = route.params;
-  console.log("item description clubprofile: ", itemDescription)
+  const {
+    itemId,
+    itemname,
+    itemDescription,
+    itemImages,
+    itemSaved,
+    itemPhone,
+    itemEmail,
+    itemWebsite,
+    itemPostCode,
+    itemCountry,
+    itemRegion,
+    itemAddress1,
+    itemAddress2,
+    itemlong,
+    itemlat,
+  } = route.params;
+  console.log("item description clubprofile: ", itemDescription);
   const {
     state,
     onProfile,
@@ -59,16 +76,53 @@ const ClubsProfile = ({ route }) => {
     clearFavProfile,
   } = useContext(Actions);
 
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `http://www.google.com/maps/place/${itemlat},${itemlong}`,
+        // url: 'https://play.google.com/store/apps/details?id=nic.goi.aarogyasetu&hl=en'
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const navigation = useNavigation();
+  let [fontLoaded, error] = useFonts({
+    Inter_900Black,
+    "Baskervville-Regular": require("../../assets/fonts/Baskervville-Regular.ttf"),
+    "OpenSans-SemiBold": require("../../assets/fonts/OpenSans-SemiBold.ttf"),
+
+    "Inter-Regular": require("../../assets/fonts/Inter-Regular.ttf"),
+    InterRegular: require("../../assets/fonts/Inter-Regular.ttf"),
+
+    "OpenSans-Regular": require("../../assets/fonts/OpenSans-Regular.ttf"),
+    OpenSansRegular: require("../../assets/fonts/OpenSans-Regular.ttf"),
+  });
+
+  // if (!fontLoaded) {
+  //   return <AppLoading />;
+  // }
+
   // const g = state?.club;
 
-  const [g, setG] = useState('')
+  const [g, setG] = useState("");
 
   const [book, setBook] = useState(true);
   const [contact, setContact] = useState(false);
   const [promotion, setPromotion] = useState(false);
   const [favorite, setFavorite] = useState(false);
 
-  const [sliderImages, setSliderImages] = useState(null)
+  const [sliderImages, setSliderImages] = useState(null);
 
   // useFocusEffect(
   //   React.useCallback(() => {
@@ -91,9 +145,6 @@ const ClubsProfile = ({ route }) => {
 
   // console.log("Showing g==================================", g)
 
-
-
-
   // useEffect(() => {
   //   onProfile("");
   //   console.log("hi");
@@ -102,7 +153,6 @@ const ClubsProfile = ({ route }) => {
   // useEffect(() => {
   //   setSliderImages(g?.images);
   // });
-
 
   const [click, setClick] = useState(itemSaved);
 
@@ -113,7 +163,6 @@ const ClubsProfile = ({ route }) => {
   //     setClick(g.is_saved);
   //     setSliderImages(g.images)
   //     // onEventsByClubs(g.id);
-
 
   //   }
   // }, [g]);
@@ -129,20 +178,18 @@ const ClubsProfile = ({ route }) => {
     // console.log("ID====================affiliate id", id);
     //  console.log("toggle================", toggle);
     setClick(!click);
-  }
+  };
 
   useEffect(() => {
     clearFavProfile();
-  }, [click])
+  }, [click]);
 
   // console.log("Onprofile============================ ", state.users);
-
 
   // useEffect(() => {
   //   onClub();
   //   console.log("hi");
   // }, [itemId, itemname]);
-
 
   let city = itemId;
   // console.log("ali", city);
@@ -168,19 +215,16 @@ const ClubsProfile = ({ route }) => {
       setBook(true);
       setPromotion(false);
       setContact(false);
-
     }
     if (ab == "promotion") {
       setBook(false);
       setPromotion(true);
       setContact(false);
-
     }
     if (ab == "contact") {
       setBook(false);
       setPromotion(false);
       setContact(true);
-
     }
   };
 
@@ -189,15 +233,14 @@ const ClubsProfile = ({ route }) => {
     try {
       onCheckInAffiliate(itemId);
       navigation.navigate("Qr", { id: itemId });
-
     } catch (error) {
-      navigation.navigate("Main")
+      navigation.navigate("Main");
     }
-  }
+  };
 
   const pressBackHandler = () => {
-    navigation.goBack(null)
-  }
+    navigation.goBack(null);
+  };
 
   return (
     <>
@@ -257,7 +300,7 @@ const ClubsProfile = ({ route }) => {
               paddingRight: 10,
               // marginTop:20,
               paddingTop: Constants.statusBarHeight + 10,
-              paddingBottom: 10
+              paddingBottom: 10,
             }}
           >
             <TouchableOpacity onPress={pressBackHandler}>
@@ -267,15 +310,16 @@ const ClubsProfile = ({ route }) => {
               <Text style={styles.textStyle1}>{itemname}</Text>
             </View>
 
-
-
-
-            <TouchableOpacity onPress={() => navigation.navigate("Map", {
-              itemLongitude: itemlong,
-              itemLatitude: itemlat,
-              itemName: itemname,
-              itemDescription: itemDescription
-            })}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Map", {
+                  itemLongitude: itemlong,
+                  itemLatitude: itemlat,
+                  itemName: itemname,
+                  itemDescription: itemDescription,
+                })
+              }
+            >
               <Ionicons name="ios-location-sharp" size={28} color="#927E5A" />
             </TouchableOpacity>
           </View>
@@ -414,10 +458,19 @@ const ClubsProfile = ({ route }) => {
                   resizeMode="contain"
                   source={require("../../assets/Image/location.png")}
                 />
-                <TouchableOpacity onPress={() => navigation.navigate("Map")}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Map", {
+                      itemLongitude: itemlong,
+                      itemLatitude: itemlat,
+                      itemName: itemname,
+                      itemDescription: itemDescription,
+                    })
+                  }
+                >
                   <Text style={styles.textStyle}>
-                    {itemAddress1} {itemAddress2} {itemRegion} {itemPostCode} {"\n"}{" "}
-                    {itemCountry}
+                    {itemAddress1} {itemAddress2} {itemRegion} {itemPostCode}{" "}
+                    {"\n"} {itemCountry}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -478,7 +531,12 @@ const ClubsProfile = ({ route }) => {
               {/* <TouchableOpacity
                 onPress={() =>
                   Linking.openURL(
-                    "https://play.google.com/store/apps/details?id=com.ubercab&hl=en&gl=US"
+                     Platform.OS === 'android' ? 
+      (
+         "https://play.google.com/store/apps/details?id=com.ubercab&hl=en&gl=US"
+      ) : "https://apps.apple.com/us/app/uber-request-a-ride/id368677368"
+                    
+                 
                   )
                 }
                 style={styles.uberContainer}
@@ -490,11 +548,40 @@ const ClubsProfile = ({ route }) => {
                 />
               </TouchableOpacity> */}
             </View>
+            <View style={styles.outerContainer1}>
+              <TouchableOpacity
+                // title="Share"
+                onPress={onShare}
+                style={{
+                  width: 200,
+                  height: 30,
+
+                  backgroundColor: "#927E5A",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  margin: 5,
+                  borderRadius: 5,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: "OpenSansRegular",
+                    textTransform: "uppercase",
+                    color: "#000000",
+                  }}
+                >
+                  Share Location
+                </Text>
+              </TouchableOpacity>
+            </View>
             <View style={styles.outerContainer}>
               <TouchableOpacity
                 onPress={() =>
                   Linking.openURL(
-                    "https://play.google.com/store/apps/details?id=com.ubercab&hl=en&gl=US"
+                    Platform.OS === "android"
+                      ? "https://play.google.com/store/apps/details?id=com.ubercab&hl=en&gl=US"
+                      : "https://apps.apple.com/us/app/uber-request-a-ride/id368677368"
                   )
                 }
                 style={styles.uberContainer}
@@ -532,7 +619,9 @@ const ClubsProfile = ({ route }) => {
               margin: 5,
               borderRadius: 5,
             }}
-            onPress={() => navigation.navigate("Venue", { itemWebsite: itemWebsite })}
+            onPress={() =>
+              navigation.navigate("Venue", { itemWebsite: itemWebsite })
+            }
           >
             <Text
               style={{
@@ -667,7 +756,15 @@ const styles = StyleSheet.create({
     fontSize: 27,
   },
   outerContainer: {
-    marginTop: 50,
+    marginTop: 10,
+    // backgroundColor: "white",
+    // height:"inherit"
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  outerContainer1: {
+    marginTop: 1,
     // backgroundColor: "white",
     // height:"inherit"
     display: "flex",

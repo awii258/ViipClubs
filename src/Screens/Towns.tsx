@@ -33,11 +33,12 @@ type Stack = {
   notification: undefined;
   Person: undefined;
   Days: undefined;
-  Animal: undefined;
+  Subscription: undefined;
   Dum: undefined;
+  Animal: undefined;
 };
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Entypo } from "@expo/vector-icons"; 
+import { Entypo } from "@expo/vector-icons";
 import ImageOverlay from "react-native-image-overlay";
 
 const Stack = createNativeStackNavigator<Stack>();
@@ -48,20 +49,27 @@ type AnimalProps = {
   navigation: NavigationAnimalProps["navigation"];
 };
 
-const Towns = ({ navigation,props }: AnimalProps) => {
- 
+const Towns = ({ navigation, props }: AnimalProps) => {
   //  const [masterDataSource, setMasterDataSource] = useState([]);
   // const [filteredDataSource, setFilteredDataSource] = useState([]);
 
   const { state, onAffiliate, clearOnProfile } = useContext(Actions);
   const [SearchTown, setSearchTown] = useState("");
-  const SearchTown_ =()=>{
+
+  console.log(
+    "Checking Acess>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+  );
+  if (state.pro.data.tier.name === "Free Membership") {
+    navigation.navigate("Subscription");
+  }
+
+  const SearchTown_ = () => {
     // alert("search", search);
     // const tempSearch=search;
     onAffiliate(SearchTown);
     // console.log("Search=====================================================searchTown", SearchTown);
-   }
-// console.log("Filtered towns=======================================",state.towns);
+  };
+  // console.log("Filtered towns=======================================",state.towns);
   useEffect(() => {
     onAffiliate();
     clearOnProfile();
@@ -69,42 +77,41 @@ const Towns = ({ navigation,props }: AnimalProps) => {
   }, []);
 
   useEffect(() => {
-    if(SearchTown === ''){
-      onAffiliate('')
+    if (SearchTown === "") {
+      onAffiliate("");
     }
   }, [SearchTown]);
-// useEffect(() => {
-//   LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
-// }, []);
+  // useEffect(() => {
+  //   LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
+  // }, []);
 
-// console.log("State ===================2", state2.towns);
+  // console.log("State ===================2", state2.towns);
 
-//   const uniqueAffiliates = new Set();
-//   const citiesorgarray=Array(state.users);
-//   console.log("jfddddddddddddddddddddddddddddddddddddddddddddddddddd", typeof(citiesorgarray));
+  //   const uniqueAffiliates = new Set();
+  //   const citiesorgarray=Array(state.users);
+  //   console.log("jfddddddddddddddddddddddddddddddddddddddddddddddddddd", typeof(citiesorgarray));
 
-//   citiesorgarray.forEach(item =>{
-//     // console.log("Items====================================================================================",item);
-//   if(item){
-//     item.forEach(obj =>{
-//       // const temp = JSON.stringify({
-//       //   town:obj.town,
-//       //   image:obj.image
-//       // })
-//       uniqueAffiliates.add(obj.town);
-      
-//     })
-//   }
-//   });
-// console.log('********************************* unique affliates', uniqueAffiliates);
+  //   citiesorgarray.forEach(item =>{
+  //     // console.log("Items====================================================================================",item);
+  //   if(item){
+  //     item.forEach(obj =>{
+  //       // const temp = JSON.stringify({
+  //       //   town:obj.town,
+  //       //   image:obj.image
+  //       // })
+  //       uniqueAffiliates.add(obj.town);
 
-//   const finalCities = [];
-//   uniqueAffiliates.forEach(item => {
-//     const temp = JSON.parse(item);
-//     finalCities.push(temp);
-//   })
-//   console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Final cities", finalCities);
-  
+  //     })
+  //   }
+  //   });
+  // console.log('********************************* unique affliates', uniqueAffiliates);
+
+  //   const finalCities = [];
+  //   uniqueAffiliates.forEach(item => {
+  //     const temp = JSON.parse(item);
+  //     finalCities.push(temp);
+  //   })
+  //   console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Final cities", finalCities);
 
   // const uniqueTowns = new Set();
   // let cities:
@@ -162,14 +169,14 @@ const Towns = ({ navigation,props }: AnimalProps) => {
 
   const [search, setSearch] = useState("");
 
-   useFocusEffect(
-     React.useCallback(() => {
+  useFocusEffect(
+    React.useCallback(() => {
       //  console.log(
       //    "====================================Screen focused======================="
       //  );
-       clearOnProfile();
-     }, [])
-   );
+      clearOnProfile();
+    }, [])
+  );
 
   const renderItem = ({ item }: any) => {
     // console.log("subhan hi", item.name);
@@ -250,7 +257,6 @@ const Towns = ({ navigation,props }: AnimalProps) => {
   //   Alert.alert(item.extra);
   // };
 
- 
   return (
     <View
       style={{
@@ -260,11 +266,13 @@ const Towns = ({ navigation,props }: AnimalProps) => {
     >
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 30,
-          alignSelf:"center",
+          paddingTop: 30,
+          paddingBottom: 30,
+          // flexDirection: "row",
+          // justifyContent: "center",
+          // alignItems: "center",
+          // padding: 30,
+          // alignSelf:"center",
         }}
       >
         <View style={styles.inputView}>
@@ -329,13 +337,11 @@ const Towns = ({ navigation,props }: AnimalProps) => {
         contentContainerStyle={{ paddingBottom: 200 }}
         showsVerticalScrollIndicator={false}
       >
-        
         <FlatList
           data={state.towns}
           keyExtractor={(item, index) => index.toString()}
           initialNumToRender={1}
           showsVerticalScrollIndicator={false}
-         
           renderItem={renderItem}
           // style={{ height: 500 }}
         />
@@ -348,16 +354,17 @@ export default Towns;
 const styles = StyleSheet.create({
   inputView: {
     flexDirection: "row",
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#B79D71",
   },
   inputDesign: {
-   fontFamily:"BaskervilleRegular",
+    fontFamily: "BaskervilleRegular",
     backgroundColor: "#B79D71",
     color: "#ffffff",
-    width: ("95%"),
+    // width: ("95%"),
+    width: "100%",
     height: 50,
-    paddingLeft:10
-  }
+    paddingLeft: 10,
+  },
 });

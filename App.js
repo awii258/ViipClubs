@@ -3,9 +3,9 @@ import { StatusBar } from 'expo-status-bar';
 import React from "react";
 import { StyleSheet, Text, View } from 'react-native';
 import LoginScreen from "./src/Screens/LoginScreen/LoginScreen"
-import {Provider as AuthProvider} from "../viiip/src/Context/Actions"
+import {Provider as AuthProvider} from "./src/Context/Actions"
 import AuthNavigation from './src/Navigation/AuthNavigation';
-import MainNavigation from "../vip/src/Navigation/AuthNavigation"
+// import MainNavigation from "../vip/src/Navigation/AuthNavigation"
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import "react-native-gesture-handler";

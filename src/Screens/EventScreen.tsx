@@ -1,26 +1,36 @@
-import { StyleSheet, Text, View , TextInput, FlatList, TouchableOpacity, ImageBackground} from 'react-native'
-import React, {useState, useEffect, useContext} from 'react'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  ImageBackground,
+} from "react-native";
+import React, { useState, useEffect, useContext } from "react";
 import { EvilIcons } from "@expo/vector-icons";
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import { Context as Actions } from "../Context/Actions";
-import PromotionScreen from '../Components/PromotionScreen';
+import PromotionScreen from "../Components/PromotionScreen";
 
-const data =[
+const data = [
   {
-    id:1,
-    text1:"Win Love Island Final Tickets + A Majorca Trip For 2.",
-    text2:"",
-    img:require("../../assets/Image/image1.png"),
+    id: 1,
+    text1: "Win Love Island Final Tickets + A Majorca Trip For 2.",
+    text2: "",
+    img: require("../../assets/Image/image1.png"),
   },
   {
-    id:2,
-    text1:"Over in the Canaries, Tenerife’s one of the best sunshine spots.",
-    text2:"",
-    img:require("../../assets/Image/image2.png"),
-  }
-]
+    id: 2,
+    text1: "Over in the Canaries, Tenerife’s one of the best sunshine spots.",
+    text2: "",
+    img: require("../../assets/Image/image2.png"),
+  },
+];
 const EventScreen = () => {
-  
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -31,30 +41,29 @@ const EventScreen = () => {
   const { state, onProfile } = useContext(Actions);
   // console.log("................>>>>>", typeof state.users);
 
-
   const renderItem = ({ item }: any) => {
     // console.log("subhan hi", item.name);
 
     return (
       <TouchableOpacity style={styles.imageContainer}>
-        <ImageBackground style={styles.imageStyle}
-        resizeMode='contain'
-         source={item.img}>
-          <Text style={[styles.textStyle,{marginTop:hp("20%"), padding:15}]}>{item.text1}</Text>
+        <ImageBackground
+          style={styles.imageStyle}
+          resizeMode="contain"
+          source={item.img}
+        >
+          <Text
+            style={[styles.textStyle, { marginTop: hp("20%"), padding: 15 }]}
+          >
+            {item.text1}
+          </Text>
         </ImageBackground>
       </TouchableOpacity>
     );
   };
 
-
-
   return (
-    <View
-      style={styles.container}
-    >
-      <View
-        style={styles.inputContainer}
-      >
+    <View style={styles.container}>
+      <View style={styles.inputContainer}>
         <View>
           <View style={styles.inputView}>
             <EvilIcons
@@ -67,13 +76,12 @@ const EventScreen = () => {
               style={styles.inputDesign}
               placeholder="Search Events"
               placeholderTextColor="#ffffff"
-              selectionColor={'#927E5A'}
+              selectionColor={"#927E5A"}
               autoCapitalize={"words"}
               selectionColor="#927E5A"
               onChangeText={(text) => setSearch(text)}
               value={search}
             ></TextInput>
-
           </View>
         </View>
       </View>
@@ -87,23 +95,18 @@ const EventScreen = () => {
           renderItem={renderItem}
         />
       </View>
+    </View>
+  );
+};
 
-
-
-      </View>
-  )
-}
-
-export default EventScreen
+export default EventScreen;
 
 const styles = StyleSheet.create({
-  container:
-  {
+  container: {
     flex: 1,
     backgroundColor: "#000000",
   },
-  inputContainer:
-  {
+  inputContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -129,23 +132,19 @@ const styles = StyleSheet.create({
     paddingLeft: 0,
     marginLeft: 10,
     borderTopLeftRadius: 50,
-    fontFamily:"BaskervilleRegular",
+    fontFamily: "BaskervilleRegular",
     backgroundColor: "#B79D71",
     color: "#424242",
   },
-  
-  textStyle:{
-    color:"#FFFFFF",
-    fontFamily:"BaskervilleRegular",
-    fontSize:16,
 
-  }, 
-  imageContainer:{
-    alignSelf:"center",
-    margin:10,
+  textStyle: {
+    color: "#FFFFFF",
+    fontFamily: "BaskervilleRegular",
+    fontSize: 16,
   },
-  imageStyle:
-  { height:262,
-    width:wp("90%"),
-  }
-})
+  imageContainer: {
+    alignSelf: "center",
+    margin: 10,
+  },
+  imageStyle: { height: 262, width: wp("90%") },
+});

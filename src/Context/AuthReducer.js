@@ -25,7 +25,8 @@ import {
   clearEventsByClubType,
   clearOnProfileType,
   onFavProfileType,
-  clearFavProfileType
+  clearFavProfileType,
+  ONTEST
 } from "./Types";
 import * as SecureStore from "expo-secure-store";
 // import AsyncStorage from '@react-native-community/async-storage'
@@ -77,30 +78,36 @@ const AuthReducer = (state, action) => {
     case onFavProfileType:
       return {
         ...state,
-        favAffiliates: payload
-      }
+        favAffiliates: payload,
+      };
 
     case clearFavProfileType:
       return {
         ...state,
-        favAffiliates: null
-      }
+        favAffiliates: null,
+      };
 
     case clearOnProfileType:
       return {
         ...state,
-        users: null
-      }
+        users: null,
+      };
     case ONCLUB:
       return {
         ...state,
 
         club: payload,
       };
-    case clearClubType:
-      return{
+    case ONTEST:
+      return {
         ...state,
-        club:null,
+
+        test: payload,
+      };
+    case clearClubType:
+      return {
+        ...state,
+        club: null,
       };
     case ONCLUBS:
       return {
@@ -169,8 +176,8 @@ const AuthReducer = (state, action) => {
     case clearEventsType:
       return {
         ...state,
-        eventTown: null
-      }
+        eventTown: null,
+      };
     case onEventsByClubs:
       return {
         ...state,
@@ -180,7 +187,7 @@ const AuthReducer = (state, action) => {
     case clearEventsByClubType:
       return {
         ...state,
-        eventClub: null
+        eventClub: null,
       };
     case LOADTOKEN:
       return {

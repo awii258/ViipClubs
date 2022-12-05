@@ -29,7 +29,7 @@ type Stack = {
   Dum: undefined;
 };
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Entypo } from "@expo/vector-icons"; 
+import { Entypo } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator<Stack>();
 
@@ -39,8 +39,7 @@ type AnimalProps = {
   navigation: NavigationAnimalProps["navigation"];
 };
 
-const DollHouse = ({ navigation,props }: AnimalProps) => {
- 
+const DollHouse = ({ navigation, props }: AnimalProps) => {
   //  const [masterDataSource, setMasterDataSource] = useState([]);
   // const [filteredDataSource, setFilteredDataSource] = useState([]);
 
@@ -73,36 +72,35 @@ const DollHouse = ({ navigation,props }: AnimalProps) => {
     // console.log("hi");
   }, []);
 
-  const { state,  onAffiliate} = useContext(Actions);
+  const { state, onAffiliate } = useContext(Actions);
 
-// console.log("State ===================2", state2.towns);
+  // console.log("State ===================2", state2.towns);
 
-//   const uniqueAffiliates = new Set();
-//   const citiesorgarray=Array(state.users);
-//   console.log("jfddddddddddddddddddddddddddddddddddddddddddddddddddd", typeof(citiesorgarray));
+  //   const uniqueAffiliates = new Set();
+  //   const citiesorgarray=Array(state.users);
+  //   console.log("jfddddddddddddddddddddddddddddddddddddddddddddddddddd", typeof(citiesorgarray));
 
-//   citiesorgarray.forEach(item =>{
-//     // console.log("Items====================================================================================",item);
-//   if(item){
-//     item.forEach(obj =>{
-//       // const temp = JSON.stringify({
-//       //   town:obj.town,
-//       //   image:obj.image
-//       // })
-//       uniqueAffiliates.add(obj.town);
-      
-//     })
-//   }
-//   });
-// console.log('********************************* unique affliates', uniqueAffiliates);
+  //   citiesorgarray.forEach(item =>{
+  //     // console.log("Items====================================================================================",item);
+  //   if(item){
+  //     item.forEach(obj =>{
+  //       // const temp = JSON.stringify({
+  //       //   town:obj.town,
+  //       //   image:obj.image
+  //       // })
+  //       uniqueAffiliates.add(obj.town);
 
-//   const finalCities = [];
-//   uniqueAffiliates.forEach(item => {
-//     const temp = JSON.parse(item);
-//     finalCities.push(temp);
-//   })
-//   console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Final cities", finalCities);
-  
+  //     })
+  //   }
+  //   });
+  // console.log('********************************* unique affliates', uniqueAffiliates);
+
+  //   const finalCities = [];
+  //   uniqueAffiliates.forEach(item => {
+  //     const temp = JSON.parse(item);
+  //     finalCities.push(temp);
+  //   })
+  //   console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Final cities", finalCities);
 
   // const uniqueTowns = new Set();
   // let cities:
@@ -160,28 +158,29 @@ const DollHouse = ({ navigation,props }: AnimalProps) => {
 
   const [search, setSearch] = useState("");
 
-
   const renderItem = ({ item }: any) => {
     // console.log("subhan hi", item.name);
 
     return (
-      <TouchableOpacity style={{
-      }}
+      <TouchableOpacity
+        style={{}}
         onPress={() => {
           navigation.navigate("Dum", {
             productTitle: item.name,
           });
         }}
       >
-        <ImageBackground resizeMode="cover"
-        overlayColor="#000000"opacity={0.2}
-         source={{uri:item.image}}
+        <ImageBackground
+          resizeMode="cover"
+          overlayColor="#000000"
+          opacity={0.2}
+          source={{ uri: item.image }}
           style={{
             height: 90,
             padding: 15,
             backgroundColor: "black",
             borderColor: "#4E8BED",
-            marginTop:15
+            marginTop: 15,
           }}
           // onPress={() => getItem(item)}
         >
@@ -189,27 +188,30 @@ const DollHouse = ({ navigation,props }: AnimalProps) => {
           {item.name}
         </Text> */}
 
-          <View style={{ flexDirection: "row", alignItems:"center", justifyContent:"space-between", padding:15}}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: 15,
+            }}
+          >
             <View>
-            <Text
-              style={{
-                color: "#927E5A",
-                fontSize: 20,
-                fontWeight: "400",
-                fontFamily:"BaskervilleRegular",
-                textTransform:"uppercase"
-
-              }}
-              selectable={true}
+              <Text
+                style={{
+                  color: "#927E5A",
+                  fontSize: 20,
+                  fontWeight: "400",
+                  fontFamily: "BaskervilleRegular",
+                  textTransform: "uppercase",
+                }}
+                selectable={true}
               >
-              {item.name}
-            </Text>
-              </View>
+                {item.name}
+              </Text>
+            </View>
 
-            <View
-              style={{
-              }}
-            >
+            <View style={{}}>
               <TouchableOpacity>
                 <Entypo name="chevron-small-right" size={24} color="#927E5A" />
               </TouchableOpacity>
@@ -224,7 +226,6 @@ const DollHouse = ({ navigation,props }: AnimalProps) => {
   //   Alert.alert(item.extra);
   // };
 
- 
   return (
     <View
       style={{
@@ -293,8 +294,15 @@ const DollHouse = ({ navigation,props }: AnimalProps) => {
         </View>
       </View>
       <View style={{ marginLeft: 10 }}>
-        <Text style={{ color: "#B79D71", fontSize: 20, fontWeight: "600",  fontFamily:"BaskervilleRegular",
-              textTransform:"uppercase"    }}>
+        <Text
+          style={{
+            color: "#B79D71",
+            fontSize: 20,
+            fontWeight: "600",
+            fontFamily: "BaskervilleRegular",
+            textTransform: "uppercase",
+          }}
+        >
           {" "}
           Select City
         </Text>
@@ -334,10 +342,10 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingLeft: 0,
     marginLeft: 10,
-    borderTopLeftRadius: 50, 
-    fontFamily:"BaskervilleRegular",
+    borderTopLeftRadius: 50,
+    fontFamily: "BaskervilleRegular",
     backgroundColor: "#B79D71",
     color: "#424242",
-    textTransform:"uppercase"
+    textTransform: "uppercase",
   },
 });

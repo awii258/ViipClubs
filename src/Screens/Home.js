@@ -5,7 +5,7 @@ import {
   Image,
   TouchableOpacity,
   StatusBar,
-  Linking
+  Linking,
 } from "react-native";
 
 import React, { useContext, useEffect, useState } from "react";
@@ -18,11 +18,13 @@ import AppLoading from "expo-app-loading";
 import { NavigationContainer } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import PromotionScreen from "../Components/PromotionScreen";
-import { AntDesign } from '@expo/vector-icons';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { AntDesign } from "@expo/vector-icons";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import { AffiliateService } from "../api/AffiliateService";
 import { SliderBox } from "react-native-image-slider-box";
-
 
 const Home = ({ route }) => {
   const navigation = useNavigation();
@@ -49,26 +51,24 @@ const Home = ({ route }) => {
     // console.log("hi");
   }, []);
 
-  const { state, onProfile, Logout, onClub, onToggleSaveAffiliate } = useContext(Actions);
+  const { state, onProfile, Logout, onClub, onToggleSaveAffiliate } =
+    useContext(Actions);
 
   const [click, setClick] = useState(g?.is_saved);
-
 
   const favButton = async (id) => {
     const toggle = await onToggleSaveAffiliate(id);
     // console.log("ID====================affiliate id", id);
     //  console.log("toggle================", toggle);
     setClick(!click);
-  }
+  };
 
   // console.log("Onprofile============================ ", state.users);
-
 
   useEffect(() => {
     onClub();
     // console.log("hi");
   }, []);
-
 
   const g = state.club;
   let city = itemId;
@@ -91,19 +91,16 @@ const Home = ({ route }) => {
       setBook(true);
       setPromotion(false);
       setContact(false);
-
     }
     if (ab == "promotion") {
       setBook(false);
       setPromotion(true);
       setContact(false);
-
     }
     if (ab == "contact") {
       setBook(false);
       setPromotion(false);
       setContact(true);
-
     }
   };
   return (
@@ -126,11 +123,13 @@ const Home = ({ route }) => {
           source={{ uri: g?.image }}
           style={{ width: 414, height: 320 }}
         /> */}
-        <View style={{ width: 414, height: 320 }} >
+        <View style={{ width: 414, height: 320 }}>
           <SliderBox
             images={{ uri: g?.image }}
             sliderBoxHeight={200}
-            onCurrentImagePressed={index => console.warn(`image ${index} pressed`)}
+            onCurrentImagePressed={(index) =>
+              console.warn(`image ${index} pressed`)
+            }
             dotColor="#927E5A"
             inactiveDotColor="#C4C4C4"
             autoplay
@@ -141,24 +140,25 @@ const Home = ({ route }) => {
               borderRadius: 360,
               marginHorizontal: 10,
               padding: 0,
-              margin: 0
+              margin: 0,
             }}
           />
         </View>
-        {
-          click ? (
-            <TouchableOpacity onPress={() => favButton(g?.id)}
-              style={{ marginTop: hp("-5%"), alignItems: "flex-end", margin: 15 }}>
-              <AntDesign name="heart" size={24} color="#927E5A" />
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={() => favButton(g?.id)}
-              style={{ marginTop: hp("-5%"), alignItems: "flex-end", margin: 15 }}>
-              <AntDesign name="hearto" size={24} color="#FFFFFF" />
-            </TouchableOpacity>
-          )
-        }
-
+        {click ? (
+          <TouchableOpacity
+            onPress={() => favButton(g?.id)}
+            style={{ marginTop: hp("-5%"), alignItems: "flex-end", margin: 15 }}
+          >
+            <AntDesign name="heart" size={24} color="#927E5A" />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => favButton(g?.id)}
+            style={{ marginTop: hp("-5%"), alignItems: "flex-end", margin: 15 }}
+          >
+            <AntDesign name="hearto" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+        )}
 
         <View
           style={{
@@ -209,9 +209,7 @@ const Home = ({ route }) => {
           {g?.description}
         </Text>
       </View> */}
-        {book ? (
-          <PromotionScreen />
-        ) : null}
+        {book ? <PromotionScreen /> : null}
         {/* {promotion ? (
           <View></View>
         ) : null} */}
@@ -225,12 +223,14 @@ const Home = ({ route }) => {
                 // padding: 5,
                 position: "relative",
                 left: 20,
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
-              <Image style={{ width: 20, height: 20 }}
+              <Image
+                style={{ width: 20, height: 20 }}
                 resizeMode="contain"
-                source={require("../../assets/Image/phone.png")} />
+                source={require("../../assets/Image/phone.png")}
+              />
 
               <Text
                 style={{
@@ -255,9 +255,11 @@ const Home = ({ route }) => {
                 left: 20,
               }}
             >
-              <Image style={{ width: 20, height: 20 }}
+              <Image
+                style={{ width: 20, height: 20 }}
                 resizeMode="contain"
-                source={require("../../assets/Image/email.png")} />
+                source={require("../../assets/Image/email.png")}
+              />
               <Text
                 style={{
                   fontSize: 15,
@@ -267,7 +269,8 @@ const Home = ({ route }) => {
                   padding: 5,
                   fontFamily: "OpenSans-Regular",
                 }}
-              >management@dollhousevip.com
+              >
+                management@dollhousevip.com
               </Text>
             </View>
             <View
@@ -280,9 +283,11 @@ const Home = ({ route }) => {
                 left: 20,
               }}
             >
-              <Image style={{ width: 20, height: 20 }}
+              <Image
+                style={{ width: 20, height: 20 }}
                 resizeMode="contain"
-                source={require("../../assets/Image/www.png")} />
+                source={require("../../assets/Image/www.png")}
+              />
               <Text
                 numberOfLines={3}
                 adjustsFontSizeToFit
@@ -309,9 +314,11 @@ const Home = ({ route }) => {
                 left: 20,
               }}
             >
-              <Image style={{ width: 20, height: 20 }}
+              <Image
+                style={{ width: 20, height: 20 }}
                 resizeMode="contain"
-                source={require("../../assets/Image/location.png")} />
+                source={require("../../assets/Image/location.png")}
+              />
               <Text
                 style={{
                   fontSize: 15,
@@ -387,7 +394,7 @@ const Home = ({ route }) => {
           position: "absolute",
           bottom: 20,
           flex: 1,
-          alignSelf: "center"
+          alignSelf: "center",
           // backgroundColor: "#927E5A",
           // width: "100%",
         }}
@@ -402,7 +409,7 @@ const Home = ({ route }) => {
               justifyContent: "center",
               alignItems: "center",
               margin: 5,
-              borderRadius: 5
+              borderRadius: 5,
             }}
             onPress={() => navigation.navigate("Venue")}
           >
@@ -434,7 +441,7 @@ const Home = ({ route }) => {
               justifyContent: "center",
               alignItems: "center",
               margin: 5,
-              borderRadius: 5
+              borderRadius: 5,
             }}
             onPress={() => navigation.navigate("Qr")}
           >

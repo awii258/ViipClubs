@@ -10,6 +10,8 @@ import ProfileScreen from "../Screens/ProfileScreen";
 
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SubscriptionsMember from "../Screens/Subscriptions/SubscriptionsMember";
+import HeaderIcon from "../Components/HeaderIcon";
 const Stack = createNativeStackNavigator();
 
 export default function AuthNavigation() {
@@ -41,6 +43,7 @@ export default function AuthNavigation() {
     }
   };
 
+
   useEffect(() => {
     LoadToken();
 
@@ -70,8 +73,10 @@ export default function AuthNavigation() {
   //     }
 
   return (
-    <Stack.Navigator initialRouteName="Home">
+    
+    <Stack.Navigator initialRouteName="Home"> 
       {state?.loadtoken || state?.token ? (
+         
         <Stack.Screen
           name="Dull"
           component={Tabs}
@@ -90,13 +95,23 @@ export default function AuthNavigation() {
             },
           }}
         />
+       
+         
       ) : (
+        
         <Stack.Screen
           name="Home"
           component={LoginScreen}
           options={{ headerShown: false }}
         />
+   
+
+        
+        
       )}
+       
     </Stack.Navigator>
+    
+    
   );
 }

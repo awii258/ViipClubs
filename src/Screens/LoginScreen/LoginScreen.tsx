@@ -12,6 +12,7 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
   Dimensions,
+  Linking,
 } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import {
@@ -37,6 +38,9 @@ type Stack = {
   Person: undefined;
   Profile: undefined;
   Forget: undefined;
+  Uni: undefined;
+  Veri: undefined;
+  Subscription: undefined;
 };
 const Stack = createNativeStackNavigator<Stack>();
 
@@ -50,8 +54,8 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const [passwordVisible, setPasswordVisible] = useState(true);
   const { state, onSignin, err } = useContext(GG);
   const { msg } = state;
-  const [email, setEmail] = useState("tom@be-vip.com");
-  const [password, setPassword] = useState("infpass12%");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   // const { state, signin } = useContext(AuthContext);
   const [checked, setChecked] = useState(false);
   const [isChecked, setShecked] = useState(false);
@@ -110,10 +114,10 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
 
             <View style={styles.input}>
               <TextInput
-                style={styles.textStyle}
+                style={[styles.textStyle, { flex: 1 }]}
                 underlineColorAndroid="transparent"
                 autoCapitalize="none"
-                placeholder="jacksnow@gmail.com"
+                placeholder="Email"
                 selectionColor={"#927E5A"}
                 placeholderTextColor={"#927E5A"}
                 onChangeText={setEmail}
@@ -127,6 +131,8 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
                 style={[styles.textStyle, { flex: 1 }]}
                 underlineColorAndroid="transparent"
                 autoCapitalize="none"
+                placeholder="Password"
+                placeholderTextColor={"#927E5A"}
                 onChangeText={setPassword}
                 selectionColor={"#927E5A"}
                 secureTextEntry={passwordVisible}
@@ -188,14 +194,31 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
             <TouchableOpacity
               style={styles.buttonStyle}
               // style={styles.forgetPassword}
-              onPress={() => {
-                navigation.navigate("Forget");
-              }}
+
+              onPress={() => Linking.openURL("https://be-vip.com/")}
             >
               <Text style={[styles.textStyle, { color: "#FFFFFF" }]}>
-                Forgot Password
+                Signup Now
               </Text>
             </TouchableOpacity>
+            <View style={{ alignSelf: "center" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  {
+                    navigation.navigate("Forget");
+                  }
+                }}
+              >
+                <Text
+                  style={[
+                    styles.textStyle,
+                    { textDecorationLine: "underline", color: "#FFFFFF" },
+                  ]}
+                >
+                  Forgot Password
+                </Text>
+              </TouchableOpacity>
+            </View>
 
             <View style={styles.textCopy}>
               <Text
