@@ -7,6 +7,7 @@ import {
     TextInput,
     TouchableOpacity,Dimensions,SafeAreaView,Animated, Easing ,
   } from "react-native";
+
   import { Context as Actions } from "../Context/Actions";
   import Lottie from 'lottie-react-native';
   import React, { useState, useContext,useRef,useEffect } from "react";
@@ -20,12 +21,16 @@ import {
   import AppLoading from "expo-app-loading";
   import { NavigationContainer } from "@react-navigation/native";
 
-  const AccessDenied = ({ navigation }) => {
-    const { state, onNew, Logout, onClub, LoadToken } = useContext(Actions);
+  const AccessDenied = ({ navigation,route }) => {
+   
+const {clubname}=route.params
+    
+    const { state, onNew, Logout, onClub, LoadToken,verifyButton } = useContext(Actions);
     useEffect(() => {
       onNew();
       // console.log("hi");
     }, []);
+   
 
     const name = state?.pro?.data.first_name || "";
     const lastname = state?.pro?.data.last_name || "";
@@ -52,7 +57,7 @@ import {
     //   }
     const [email, setEmail] = useState("");
   
-    const e = "hassan@lloydsknightint.com";
+    
   
     return (
       <>
@@ -69,7 +74,7 @@ import {
             height={Dimensions.get("window").height}
             source={require("../../assets/Image/homeScreenBG.jpg")}
           >
-          <View style={{ alignSelf: "center",flex:1 }}>
+          <View style={{ alignSelf: "center",flex:1,justifyContent:'center',marginBottom:"32%"}}>
             <Text
               style={{
                 color: "#B79D71",
@@ -93,11 +98,12 @@ import {
               }}
             >
               {" "}
-              Access Granted
+              ACCESS GRANTED
             </Text>
           <View style={{width:280,height:180,justifyContent:'center',alignSelf:'center',}}>
             <Lottie
       source={require('../../assets/Image/access.json')}
+      style={{width:250,height:250,alignSelf:'center'}}
      autoPlay
 /></View>
             {/* <Image
@@ -121,6 +127,11 @@ import {
               >
                {name} {lastname}
               </Text>
+              <Text style={{
+                  color: "#B79D71",
+                  fontSize: 24,
+                  fontFamily: "OpenSans-Regular",
+                }}>+1</Text>
               <Text
                 numberOfLines={2}
                 adjustsFontSizeToFit
@@ -134,14 +145,15 @@ import {
                   marginTop:10
                 }}
               >
-                 Welcome! BeVIP Member
+                 Welcome! Be VIP Member
               </Text>
             </View>
-            <View style={styles.buttonStyle}>
+           {clubname? <View style={styles.buttonStyle}>
               <TouchableOpacity
                 style={styles.buttonDesign}
                 onPress={() => {
-                  navigation.navigate("Qr");
+                  verifyButton(true);
+                  navigation.navigate("Qr",{clubname:"club"});
                 }}
               >
                 <Text
@@ -156,7 +168,27 @@ import {
                   Done
                 </Text>
               </TouchableOpacity>
-            </View>
+            </View>: <View style={styles.buttonStyle}>
+              <TouchableOpacity
+                style={styles.buttonDesign}
+                onPress={() => {
+                  verifyButton(true);
+                  navigation.navigate("Queue Jump");
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#000",
+                    alignSelf: "center",
+                    fontSize: 20,
+                    fontWeight: "600",
+                    fontFamily: "OpenSans-SemiBold",
+                  }}
+                >
+                  Done
+                </Text>
+              </TouchableOpacity>
+            </View>}
           </View>
           </ImageOverlay>
         </SafeAreaView>
@@ -168,8 +200,9 @@ import {
   
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
+      // flex: 1,
     //   backgroundColor: "#080402",
+    // margin:30,
     },
     input: {
       margin: 15,

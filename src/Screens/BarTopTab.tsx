@@ -3,14 +3,17 @@ import ClubEvents from "./ClubEvents";
 import Bars from "./TabsScreen/Bars";
 import Clubs from "./Clubs";
 import ClubBars from "../Screens/ClubBars";
-
+import EventsType from "./Events/EventsType";
+import TownEurope from "../Screens/TownEurope";
+import Towns from "../Screens/Towns";
 const Tab = createMaterialTopTabNavigator();
 
-function BarTopTab({ route }) {
-  const Product = route.params.productTitle;
+function BarTopTab() {
+  // const Product = route.params.productTitle;
   return (
     <Tab.Navigator
       screenOptions={{
+        
         tabBarStyle: {
           backgroundColor: "#000000",
           borderTopWidth: 1,
@@ -20,6 +23,7 @@ function BarTopTab({ route }) {
         tabBarLabelStyle: {
           fontFamily: "BaskervilleRegular",
           borderBottomColor: "#927E5A",
+          fontSize:22
         },
         tabBarIndicatorStyle: {
           backgroundColor: "#FFFFFF",
@@ -32,19 +36,26 @@ function BarTopTab({ route }) {
       }}
     >
       <Tab.Screen
-        name="Dum"
-        component={ClubBars}
-        initialParams={{ productTitle: Product }}
+        name="Towns"
+        component={Towns}
+        // initialParams={{ productTitle: Product }}
         options={({ route }) => ({
-          title: `Events IN ${Product}`,
+          // title: `Events IN ${Product}`,
+          title:"UK"
         })}
       />
       <Tab.Screen
-        name="Bar Events"
-        component={ClubEvents}
-        initialParams={{ productTitle: Product }}
+        name="Town Europe"
+        component={TownEurope}
+        // initialParams={{ productTitle: Product }}
         options={({ route }) => ({
-          title: `What's On ${Product}`,
+          // title: `What's On ${Product}`,
+          title:"Europe",
+          // headerTitleStyle: {
+          //   color: "#000",
+          //   fontFamily: "BaskervilleRegular",
+          //   fontSize:100,
+          // },
         })}
       />
     </Tab.Navigator>

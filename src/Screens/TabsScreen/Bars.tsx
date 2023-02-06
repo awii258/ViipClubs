@@ -5,8 +5,10 @@ import {
   NativeStackScreenProps,
 } from "@react-navigation/native-stack";
 
+
 import React, { useContext, useEffect, useState } from "react";
 import { Context as Actions } from "../../Context/Actions";
+
 import { MaterialIcons } from "@expo/vector-icons";
 import {
   useNavigation,
@@ -24,6 +26,7 @@ import {
   TextInput,
   ScrollView,
   StatusBar,
+  SafeAreaView,
 } from "react-native";
 
 type Stack = {
@@ -48,32 +51,90 @@ type AnimalProps = {
 };
 
 const Bars = ({ navigation, props }: AnimalProps) => {
+
   //  const [masterDataSource, setMasterDataSource] = useState([]);
   // const [filteredDataSource, setFilteredDataSource] = useState([]);
 
-  const { state, onAffiliate, clearOnProfile } = useContext(Actions);
+  const { state, onAffiliate, clearOnProfile, onEventTown, onMultiple,verifyButton } =
+    useContext(Actions);
   const [SearchTown, setSearchTown] = useState("");
-  if(state.pro.data.tier.name === "Free Membership"){
-    navigation.navigate("Subscription")
+  // const[pageCount, setPageCount] = useState(1)
+  // const[pageLength, setPageLength] = useState(2)
+  const [type, setType] = useState("");
+  const [types, setTypes] = useState("Major Events");
+  const [towns, setTowns] = useState([]);
+  const [filteredTowns, setFilteredTowns] = useState([]);
+  const [totalTowns, setTotalTowns] = useState(0);
+  const [pageCount, setPageCount] = useState(25);
+  const a = "Major Event";
+  if (
+    state?.pro?.data?.tier === null ||
+    state?.pro?.data?.tier?.name.includes("Free Membership")
+  ) {
+    navigation.navigate("Subscription");
   }
+
+  console.log("hello this is search set", SearchTown);
   const SearchTown_ = () => {
     // alert("search", search);
     // const tempSearch=search;
-    onAffiliate(SearchTown);
+    // onMultiple("","",SearchTown,"","Major Event");
     // console.log(
     //   "Search=====================================================searchTown",
     //   SearchTown
     // );
   };
+  // useEffect(()=>{
+  //   if(SearchTown){
+  //     onMultiple("","",SearchTown,"","Major Event");
+  //   }
+  //   else{
+  //     onMultiple("","",SearchTown,"","Major Event");
+
+  //   }
+  // },[SearchTown])
+
   // console.log(
   //   "Filtered towns=======================================",
   //   state.towns
   // );
+
   useEffect(() => {
-    onAffiliate();
+    if (state && state.multiple) {
+      const tempArr = state.multiple;
+      tempArr.sort(function (a, b) {
+        var textA = a.name.toUpperCase();
+        var textB = b.name.toUpperCase();
+        return textA < textB ? -1 : textA > textB ? 1 : 0;
+      });
+      setTowns(tempArr);
+      setTotalTowns(tempArr.length);
+      setFilteredTowns([...tempArr.slice(0, 25)]);
+      setPageCount(25);
+    }
+  }, [state?.multiple]);
+
+  useEffect(() => {
+    setFilteredTowns([...towns.slice(0, pageCount)]);
+  }, [pageCount]);
+
+  useEffect(() => {
+    onMultiple("", 1000, SearchTown,"bar", "");
     clearOnProfile();
     // console.log("hi");
   }, []);
+
+  // useEffect(()=>{
+  //   onAffiliate("", pageCount, pageLength, "events");
+  // },[pageCount, pageLength])
+
+  // useEffect(()=>{
+  //   if(state && state.eventTowns){
+  //     const tempArr = state.eventTowns
+  //     console.log("Temp array in events: ", tempArr)
+  //     setTowns([...towns, ...tempArr])
+  //   }
+  // },[state?.eventTowns])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -81,96 +142,23 @@ const Bars = ({ navigation, props }: AnimalProps) => {
       //   "====================================Screen focused======================="
       // );
       clearOnProfile();
+      verifyButton(false);
     }, [])
   );
 
   useEffect(() => {
-    if (SearchTown === "") {
-      onAffiliate("");
+    if (towns.length > 0) {
+      if (SearchTown) {
+        const tempArr = towns.filter((item) =>
+          item.name.toLowerCase().includes(SearchTown.toLowerCase())
+        );
+        setFilteredTowns(tempArr);
+      } else {
+        setFilteredTowns([...towns.slice(0, 25)]);
+        setPageCount(25);
+      }
     }
   }, [SearchTown]);
-
-  // console.log("State ===================2", state2.towns);
-
-  //   const uniqueAffiliates = new Set();
-  //   const citiesorgarray=Array(state.users);
-  //   console.log("jfddddddddddddddddddddddddddddddddddddddddddddddddddd", typeof(citiesorgarray));
-
-  //   citiesorgarray.forEach(item =>{
-  //     // console.log("Items====================================================================================",item);
-  //   if(item){
-  //     item.forEach(obj =>{
-  //       // const temp = JSON.stringify({
-  //       //   town:obj.town,
-  //       //   image:obj.image
-  //       // })
-  //       uniqueAffiliates.add(obj.town);
-
-  //     })
-  //   }
-  //   });
-  // console.log('********************************* unique affliates', uniqueAffiliates);
-
-  //   const finalCities = [];
-  //   uniqueAffiliates.forEach(item => {
-  //     const temp = JSON.parse(item);
-  //     finalCities.push(temp);
-  //   })
-  //   console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Final cities", finalCities);
-
-  // const uniqueTowns = new Set();
-  // let cities:
-  //   | any[]
-  //   | (() => any[])
-  //   | readonly { town: unknown }[]
-  //   | null
-  //   | undefined = [];
-
-  // const townArr = state.users;
-
-  // if (townArr) {
-  //   for (const item of Object.entries(state.users)) {
-  //     console.log("iterating object");
-  //     const [key, value] = item;
-  //     console.log("awaiz", value.town);
-  //     const tempObj = {
-  //       town: value.town,
-  //     };
-  //     uniqueTowns.add(value.town);
-  //     // uniqueTowns.add(item[1].["town"])
-  //   }
-  // } else {
-  //   console.log("town arr empty");
-  // }
-  // // console.log("unique town ",uniqueTowns)
-  // cities = Array.from(uniqueTowns);
-
-  // cities = cities.map((item) => {
-  //   return {
-  //     town: item,
-  //   };
-  // });
-
-  //
-
-  //  const b = state.users;
-
-  //  const uniqueString = [...new Set(b)]
-
-  //    console.log
-  // const uniqueTowns = new Set()
-
-  // for (const object of state.users){
-  //   console.log("Displaying state.users")
-  //   console.log(object)
-  // }
-
-  // const experimentedArray = state.user.map(item => {
-
-  // })
-
-  // const v= state.users;
-  //   const a = v.filter((el, i) => el.town)
 
   const [search, setSearch] = useState("");
 
@@ -181,7 +169,7 @@ const Bars = ({ navigation, props }: AnimalProps) => {
       <TouchableOpacity
         style={{ alignItems: "center", justifyContent: "center" }}
         onPress={() => {
-          navigation.navigate("BarTopTabScreen", {
+          navigation.navigate("ClubsBars", {
             productTitle: item.name,
           });
         }}
@@ -235,7 +223,7 @@ const Bars = ({ navigation, props }: AnimalProps) => {
             <View style={{}}>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("BarTopTabScreen", {
+                  navigation.navigate("ClubsBars", {
                     productTitle: item.name,
                   });
                 }}
@@ -249,22 +237,21 @@ const Bars = ({ navigation, props }: AnimalProps) => {
     );
   };
 
-  // const getItem = (item) => {
-  //   Alert.alert(item.extra);
-  // };
-
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: "#000000",
+        display: "flex",
       }}
     >
       <View
         style={{
-
-          paddingTop:30,
-          paddingBottom:30
+          marginTop: 20,
+          // paddingTop:13,
+          // paddingBottom: 8,
+          // paddingTop:30,
+          // paddingBottom:30
           // flexDirection: "row",
           // justifyContent: "center",
           // alignItems: "center",
@@ -272,23 +259,31 @@ const Bars = ({ navigation, props }: AnimalProps) => {
           // alignSelf: "center",
         }}
       >
-        <View style={styles.inputView}>
+      <View style={styles.inputView}>
           <EvilIcons
             name="search"
             size={24}
             color="#ffffff"
             style={{ paddingLeft: 15 }}
           />
+
+          {/* <View style={{flexDirection:"row",alignItems: "center",}}> */}
           <TextInput
             style={styles.inputDesign}
             placeholder="SEARCH CITY"
             placeholderTextColor="#ffffff"
             autoCapitalize={"words"}
-            selectionColor="#ffffff"
+            selectionColor="#927E5A"
             onChangeText={(text) => setSearchTown(text)}
             onSubmitEditing={SearchTown_}
             value={SearchTown}
           ></TextInput>
+          {/* { SearchTown ?<TouchableOpacity onPress={() =>setSearchTown("")}>
+            
+            <EvilIcons name="close-o" size={26} color="#ffffff" />
+            </TouchableOpacity>:null}
+         
+</View>  */}
 
           {/* <TextInput
               style={{
@@ -323,39 +318,58 @@ const Bars = ({ navigation, props }: AnimalProps) => {
             /> */}
         </View>
       </View>
-      {/* <View style={{ marginLeft: 10 }}>
-        <Text
-          style={{
-            color: "#B79D71",
-            fontSize: 20,
-            fontWeight: "600",
-            fontFamily: "BaskervilleRegular",
-            textTransform: "uppercase",
-          }}
-        >
-          {" "}
-          Select City
-        </Text>
-      </View> */}
+
       <ScrollView
         contentContainerStyle={{ paddingBottom: 200 }}
         showsVerticalScrollIndicator={false}
       >
         <FlatList
-          data={state.towns}
+          data={filteredTowns}
           keyExtractor={(item, index) => index.toString()}
           initialNumToRender={1}
           showsVerticalScrollIndicator={false}
           renderItem={renderItem}
-          // style={{ height: 500 }}
+          contentContainerStyle={{
+            flexGrow: 1,
+          }}
+
+          // style={{
+          //   flex:1,
+          //   width: "100%",
+          //   height:"auto",
+          //   backgroundColor: "#FFFFFF",
+
+          // }}
         />
+        {towns &&
+          state?.multiple &&
+          filteredTowns.length !== totalTowns &&
+          !SearchTown &&
+          totalTowns > 25 && (
+            <Text
+              style={{
+                color: "#927E5A",
+                textAlign: "center",
+                alignSelf: "center",
+                marginTop: 15,
+                fontSize: 16,
+                fontFamily: "BaskervilleRegular",
+              }}
+              onPress={() => setPageCount(pageCount + pageCount)}
+            >
+              LOAD MORE
+            </Text>
+          )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default Bars;
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   inputView: {
     flexDirection: "row",
     // justifyContent: "center",
@@ -366,7 +380,7 @@ const styles = StyleSheet.create({
     fontFamily: "BaskervilleRegular",
     backgroundColor: "#B79D71",
     color: "#ffffff",
-    width: "100%",
+    width: "85%",
     height: 50,
     paddingLeft: 10,
   },

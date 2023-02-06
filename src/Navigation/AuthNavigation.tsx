@@ -1,17 +1,21 @@
 import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
 // import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import {createStackNavigator, CardStyleInterpolators} from '@react-navigation/stack'
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+} from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import LoginScreen from "../Screens/LoginScreen/LoginScreen";
 import SplashScreen from "../Screens/SplashScreen";
-import ProfileScreen from "../Screens/ProfileScreen";
+import EditProfile from "../EditScreen/EditProfile";
 import { Provider as AuthProvider } from "../Context/AuthContext";
 import { Context as Action } from "../Context/Actions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ForgetPassword from "../Screens/ForgetPassword/ForgetPassword";
 import EventScreen from "../Screens/EventScreen";
-
+import Calender from "../../src/Calender";
+import BookTable from "../Screens/BookTable";
 import Map from "../Screens/Map";
 import Tabs from "./Tabs";
 import ClubsProfile from "../Screens/ClubsProfile";
@@ -46,7 +50,8 @@ import AccessSelected from "../AccessSelected/AccessSelected";
 import AccessDenied from "../AccessDenied/AccessDenied";
 import VerifyingLocation from "../Screens/VerifyingLocation/VerifyingLocation";
 import SubscriptionsMember from "../Screens/Subscriptions/SubscriptionsMember";
-
+import SingUp from "../Screens/SignUp/SingUp";
+import ClubBars from "../Screens/ClubBars";
 
 const Stack = createStackNavigator();
 
@@ -80,7 +85,7 @@ export default function AuthNavigation({ route }) {
   }, []);
 
   const OpenScreenConfig = {
-    animation: 'spring',
+    animation: "spring",
     config: {
       stiffness: 500,
       damping: 200,
@@ -92,48 +97,14 @@ export default function AuthNavigation({ route }) {
   };
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{
-        // headerShown:false,
-        // gestureEnabled:true,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}>
-        {/* <Stack.Screen
-          name="First"
-          component={First}
-          options={({ route }) => ({
-            title: "Search",
-            headerShown: false,
-            headerTintColor: "#927E5A",
-            headerTitleAlign: "center",
-            headerTitleStyle: { color: "#927E5A" },
-            headerStyle: {
-              backgroundColor: "#080402",
-              borderBottomColor: "#927E5A",
-              borderBottomWidth: 1,
-              borderTopWidth: 1,
-              borderTopColor: "#927E5A",
-            },
-          })}
-        /> */}
-
-        {/* <Stack.Screen
-          name="Se"
-          component={SplashScreens}
-          options={({ route }) => ({
-            title: "Search",
-            headerShown: false,
-            headerTintColor: "#927E5A",
-            headerTitleAlign: "center",
-            headerTitleStyle: { color: "#927E5A" },
-            headerStyle: {
-              backgroundColor: "#080402",
-              borderBottomColor: "#927E5A",
-              borderBottomWidth: 1,
-              borderTopWidth: 1,
-              borderTopColor: "#927E5A",
-            },
-          })}
-        /> */}
+      <Stack.Navigator
+        screenOptions={{
+          // headerShown:false,
+          // gestureEnabled:true,
+          cardStyleInterpolator:
+            CardStyleInterpolators.forFadeFromBottomAndroid,
+        }}
+      >
         <Stack.Screen
           name="Main"
           component={MainNavigation}
@@ -147,7 +118,7 @@ export default function AuthNavigation({ route }) {
               fontFamily: "BaskervilleRegular",
             },
             headerStyle: { backgroundColor: "#080402" },
-            
+
             headerRight: () => <HeaderIcon />,
           }}
         />
@@ -163,17 +134,19 @@ export default function AuthNavigation({ route }) {
             headerTitleStyle: {
               color: "#927E5A",
               fontFamily: "BaskervilleRegular",
+              textTransform: "uppercase",
+              fontSize: 20,
             },
             headerStyle: { backgroundColor: "#080402" },
             headerRight: () => <HeaderIcon />,
           }}
         />
         <Stack.Screen
-          name="Profiles"
-          component={ProfileScreen}
+          name="SignUp"
+          component={SingUp}
           options={{
             // headerStyle: styles.header,
-            title: "PROFILE",
+            title: "REGISTER",
             headerTintColor: "#927E5A",
             headerTitleAlign: "center",
             headerTitleStyle: {
@@ -186,6 +159,7 @@ export default function AuthNavigation({ route }) {
             headerRight: () => <HeaderIcon />,
           }}
         />
+
         <Stack.Screen
           name="Tabs"
           component={Tabs}
@@ -198,7 +172,7 @@ export default function AuthNavigation({ route }) {
               color: "#927E5A",
               fontFamily: "BaskervilleRegular",
               textTransform: "uppercase",
-              fontSize: 24,
+              fontSize: 20,
             },
             headerStyle: { backgroundColor: "#080402" },
             headerRight: () => <HeaderIcon />,
@@ -212,12 +186,11 @@ export default function AuthNavigation({ route }) {
 
             headerTintColor: "#927E5A",
             headerTitleAlign: "center",
-            headerBackTitleVisible:false,
+            headerBackTitleVisible: false,
             headerTitleStyle: {
               color: "#927E5A",
               fontFamily: "BaskervilleRegular",
               fontSize: 24,
-              
             },
             headerStyle: {
               backgroundColor: "#080402",
@@ -228,10 +201,8 @@ export default function AuthNavigation({ route }) {
               // fontSize: 24,
               // fontFamily: "BaskervilleRegular",
               // alignItems: "center",
-              
             },
             headerRight: () => <HeaderIcon />,
-            
           })}
         />
         <Stack.Screen
@@ -239,7 +210,7 @@ export default function AuthNavigation({ route }) {
           component={BarTopTab}
           options={({ route }) => ({
             title: route.params.productTitle,
-            headerBackTitleVisible:false,
+            headerBackTitleVisible: false,
             headerTintColor: "#927E5A",
             headerTitleAlign: "center",
             headerTitleStyle: {
@@ -262,6 +233,22 @@ export default function AuthNavigation({ route }) {
         <Stack.Screen
           name="ClubEvents"
           component={ClubEvents}
+          options={{
+            // headerStyle: styles.header,
+            title: "CLUB EVENTS",
+            headerTintColor: "#927E5A",
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "#927E5A",
+              fontFamily: "BaskervilleRegular",
+              fontSize: 24,
+            },
+            headerStyle: { backgroundColor: "#080402" },
+          }}
+        />
+           <Stack.Screen
+          name="Calender"
+          component={Calender}
           options={{
             // headerStyle: styles.header,
             title: "CLUB EVENTS",
@@ -302,7 +289,7 @@ export default function AuthNavigation({ route }) {
             // title: { ((route.params.title).length > 12) ?
             //   (((mytextvar).substring(0,maxlimit-3)) + '...') :
             //   mytextvar }
-            headerBackTitleVisible:false,
+            headerBackTitleVisible: false,
             headerTintColor: "#927E5A",
             headerTitleAlign: "center",
             headerTitleStyle: {
@@ -336,7 +323,7 @@ export default function AuthNavigation({ route }) {
             // title: { ((route.params.title).length > 12) ?
             //   (((mytextvar).substring(0,maxlimit-3)) + '...') :
             //   mytextvar }
-            headerBackTitleVisible:false,
+            headerBackTitleVisible: false,
             headerTintColor: "#927E5A",
             headerTitleAlign: "center",
             headerTitleStyle: {
@@ -411,8 +398,8 @@ export default function AuthNavigation({ route }) {
             headerRight: () => <HeaderIcon />,
           })}
         />
-        {/* <Stack.Screen
-          name="Dum"
+        <Stack.Screen
+          name="ClubsBars"
           component={ClubBars}
           options={({ route }) => ({
             title: route.params.productTitle,
@@ -422,27 +409,27 @@ export default function AuthNavigation({ route }) {
             headerTitleStyle: {
               color: "#927E5A",
               fontFamily: "BaskervilleRegular",
-              textTransform: "uppercase",
+              // textTransform: "uppercase",
               fontSize:24
             },
             headerStyle: {
               backgroundColor: "#080402",
-              borderBottomColor: "#85106a",
-              borderBottomWidth: 5,
-              borderTopWidth: 5,
-              borderTopColor: "#85106a",
+              borderBottomColor: "#927E5A",
+              borderBottomWidth: 1,
+              borderTopWidth: 1,
+              borderTopColor: "#927E5A",
               fontFamily: "BaskervilleRegular",
             },
             headerRight: () => <HeaderIcon />,
           })}
-        /> */}
+        />
 
         <Stack.Screen
           name="Venue"
           component={Book}
           options={({ route }) => ({
             title: "BOOK VENUE",
-            headerBackTitleVisible:false,
+            headerBackTitleVisible: false,
             headerTintColor: "#927E5A",
             headerTitleAlign: "center",
             headerTitleStyle: {
@@ -466,14 +453,43 @@ export default function AuthNavigation({ route }) {
             headerRight: () => <HeaderIcon />,
           })}
         />
-         
-        <Stack.Screen
+
+<Stack.Screen
+          name="Table"
+          component={BookTable}
+          options={({ route }) => ({
+            title: "BOOK A TABLE ",
+            headerBackTitleVisible: false,
+            headerTintColor: "#927E5A",
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "#927E5A",
+              fontFamily: "BaskervilleRegular",
+              textTransform: "uppercase",
+              fontSize: 24,
+            },
+            headerStyle: {
+              backgroundColor: "#080402",
+              // elevation: 0, // remove shadow on Android
+              // shadowOpacity: 0, // remove shadow on iOS
+
+              // borderColor: "#927E5A",
+              // borderBottomWidth: 2,
+              // borderBottomColor: "red",
+              // borderTopWidth: 2,
+              // borderTopColor: "red",
+              // fontFamily: "BaskervilleRegular",
+            },
+            headerRight: () => <HeaderIcon />,
+          })}
+        />
+        {/* <Stack.Screen
           name="Queues"
           component={Queue}
           options={({ route }) => ({
             title: "QUEUE JUMP",
             borderBottomWidth: 0,
-            headerBackTitleVisible:false,
+            headerBackTitleVisible: false,
             headerTintColor: "#927E5A",
             headerTitleAlign: "center",
             headerTitleStyle: {
@@ -488,13 +504,13 @@ export default function AuthNavigation({ route }) {
             },
             headerRight: () => <HeaderIcon />,
           })}
-        />
-         <Stack.Screen
+        /> */}
+        <Stack.Screen
           name="Subscription"
           component={SubscriptionsMember}
           options={({ route }) => ({
-            title: " MEMBERSHIP",
-            headerBackTitleVisible:false,
+            title: "MEMBERSHIP",
+            headerBackTitleVisible: false,
             headerTintColor: "#927E5A",
             headerTitleAlign: "center",
             headerTitleStyle: {
@@ -530,7 +546,7 @@ export default function AuthNavigation({ route }) {
               color: "#927E5A",
               fontFamily: "BaskervilleRegular",
               textTransform: "uppercase",
-              fontSize: 24,
+              fontSize: 20,
             },
             headerStyle: {
               backgroundColor: "#080402",
@@ -543,7 +559,7 @@ export default function AuthNavigation({ route }) {
           component={Qrcode}
           options={({ route }) => ({
             title: "QUEUE JUMP",
-            headerBackTitleVisible:false,    
+            headerBackTitleVisible: false,
             headerTintColor: "#927E5A",
             headerTitleAlign: "center",
             headerTitleStyle: {
@@ -571,7 +587,7 @@ export default function AuthNavigation({ route }) {
               color: "#927E5A",
               fontFamily: "BaskervilleRegular",
               textTransform: "uppercase",
-              fontSize: 24,
+              fontSize: 20,
             },
             headerStyle: {
               backgroundColor: "#080402",
@@ -592,7 +608,7 @@ export default function AuthNavigation({ route }) {
               color: "#927E5A",
               fontFamily: "BaskervilleRegular",
               textTransform: "uppercase",
-              fontSize: 24,
+              fontSize: 20,
             },
             headerStyle: {
               backgroundColor: "#080402",
@@ -600,6 +616,25 @@ export default function AuthNavigation({ route }) {
             },
             headerRight: () => <HeaderIcon />,
           })}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
+          options={{
+            // headerStyle: styles.header,
+            title: "PROFILE",
+            // headerShown:false,
+            headerTintColor: "#927E5A",
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "#927E5A",
+              fontFamily: "BaskervilleRegular",
+              textTransform: "uppercase",
+              fontSize: 24,
+            },
+            headerStyle: { backgroundColor: "#080402" },
+            headerRight: () => <HeaderIcon />,
+          }}
         />
         <Stack.Screen
           name="Events"
@@ -720,7 +755,7 @@ export default function AuthNavigation({ route }) {
             headerRight: () => <HeaderIcon />,
           })}
         />
-          <Stack.Screen
+        <Stack.Screen
           name="Verify"
           component={VerifyingLocation}
           options={({ route }) => ({
@@ -729,7 +764,7 @@ export default function AuthNavigation({ route }) {
             headerTintColor: "#927E5A",
             headerTitleAlign: "center",
             headerTitleStyle: {
-              color: "#927E5A", 
+              color: "#927E5A",
               fontFamily: "BaskervilleRegular",
               textTransform: "uppercase",
               fontSize: 24,

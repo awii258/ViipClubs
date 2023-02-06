@@ -55,26 +55,67 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const { state, onSignin, err } = useContext(GG);
   const { msg } = state;
   const [email, setEmail] = useState("");
+  const [email2, setEmail2] = useState("");
   const [password, setPassword] = useState("");
   // const { state, signin } = useContext(AuthContext);
   const [checked, setChecked] = useState(false);
   const [isChecked, setShecked] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+   if(rememberMe === true){
+       AsyncStorage.setItem("lase-user-email", email);}
+      if(rememberMe  === true){
+       AsyncStorage.setItem("user-password", password);}
+console.log("remember me call",rememberMe)
 
-  useEffect(() => {
+// useEffect(()=>{
+//   setTimeout(()=>{
+//     onSignin({ email, password });
+//   },3000)
+// },[])
+  useEffect( () => {
+    // setTimeout(() => {
+     
+    //   setRememberMe(false);
+    // }, 10);
+   
+ 
     const getLastUsedEmail = async () => {
-      const lastEmail = await AsyncStorage.getItem("last-user-email");
-      // console.log("awaizbutt1235846", lastEmail)
-      if (lastEmail) {
-        setEmail(lastEmail);
-      }
-      const rememberMeSetting = await AsyncStorage.getItem("remember-me");
-      if (rememberMeSetting) {
-        setRememberMe(JSON.parse(rememberMeSetting));
-      }
-    };
-    getLastUsedEmail();
-  });
+
+    
+      
+      console.log("enter inside of true")
+    const lastEmail = await AsyncStorage.getItem("lase-user-email");
+    const lastPassword= await AsyncStorage.getItem("user-password");
+    console.log("awaizbutt1235846", lastEmail)
+    if (lastEmail) {
+      setEmail(lastEmail);
+    }
+    if(lastPassword){
+      setPassword(lastPassword);
+    }
+  
+    // const rememberMeSetting = await AsyncStorage.getItem("remember-me");
+    
+    // if (rememberMeSetting) {
+    //   setRememberMe(JSON.parse(rememberMeSetting));
+    //   console.log("remember me",rememberMe)
+     
+    // }
+  
+  };
+
+  getLastUsedEmail();
+   
+  },[rememberMe]);
+ 
+
+
+// if(rememberMe !==true){
+//   AsyncStorage.removeItem("lase-user-email");
+//   AsyncStorage.removeItem("user-password");
+// }
+ 
+  console.log("email of login",email2)
   const e = "hassan@lloydsknightint.com";
   const p = "kS3fK4nV0pB1cG1f";
 
@@ -153,8 +194,10 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
                 />
               </TouchableOpacity>
             </View>
-            {/* <View
-          style={{ flexDirection: "row", marginLeft: 8, alignItems: "center" }}
+
+            <View
+          style={{ flexDirection: "row", marginLeft: 29.5,marginBottom:10,alignItems:'center',height:"2%" }}
+          
           >
           <Checkbox
             style={styles.checkbox}
@@ -164,11 +207,12 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
             }}
             color={isChecked ? "#927E5A" : "#927E5A"}
             />
-            
-            <Text style={{ color: "#927E5A", marginLeft: 3, fontSize: 14 }}>
+            <TouchableOpacity onPress={()=>setRememberMe(!rememberMe)}>
+            <Text style={{ color: "#927E5A", marginLeft:15, fontSize: 14 }}>
             Remember me
             </Text>
-          </View> */}
+            </TouchableOpacity>
+          </View>
 
             <TouchableOpacity
               style={styles.buttonStyle}
@@ -179,7 +223,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               }}
             >
               <Text style={[styles.textStyle, { color: "#FFFFFF" }]}>
-                Login
+                LOGIN
               </Text>
             </TouchableOpacity>
 
@@ -187,18 +231,18 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
           <Text style={{ color: "#927E5A", fontSize: 15 }}>OR</Text>
         </View> */}
 
-            <View style={{ margin: 10 }}>
+            {/* <View style={{ margin: 10 }}>
               <Text style={styles.textStyle}>OR</Text>
-            </View>
+            </View> */}
 
             <TouchableOpacity
               style={styles.buttonStyle}
               // style={styles.forgetPassword}
 
-              onPress={() => Linking.openURL("https://be-vip.com/")}
+              onPress={() => navigation.navigate("SignUp")}
             >
               <Text style={[styles.textStyle, { color: "#FFFFFF" }]}>
-                Signup Now
+                SIGN UP 
               </Text>
             </TouchableOpacity>
             <View style={{ alignSelf: "center" }}>
@@ -224,7 +268,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               <Text
                 style={[styles.textStyle, { color: "#C4C4C4", marginTop: 20 }]}
               >
-                © 2022 Be VIP. All Rights Reserved
+                © 2023 Be VIP. All Rights Reserved
               </Text>
             </View>
           </ScrollView>
@@ -258,7 +302,7 @@ const styles = StyleSheet.create({
     padding: 8,
     color: "#927E5A",
     borderWidth: 1,
-    marginBottom: 30,
+    marginBottom: 25,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -283,7 +327,7 @@ const styles = StyleSheet.create({
   },
 
   checkbox: {
-    margin: 8,
+    // margin: 5,
     borderWidth: 1,
   },
   copyRight: {

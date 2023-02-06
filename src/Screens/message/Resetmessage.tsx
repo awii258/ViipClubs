@@ -91,11 +91,10 @@ const Resetmessage = ({ navigation }: LoginScreenProps) => {
             >
               <Text
                 style={{
-                  color: "black",
-                  alignSelf: "center",
-                  fontSize: 20,
-                  fontWeight: "600",
-                  fontFamily: "OpenSans-SemiBold",
+                  color: "#ffff",
+                  fontFamily: "OpenSansRegular",
+                  fontSize: 16,
+                  alignSelf: "center"
                 }}
               >
                 Done
@@ -127,16 +126,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#080402",
   },
   buttonStyle: {
-    marginTop: 80,
-   alignSelf:"center"
+    marginTop: 60,
+    marginLeft: 15,
+    marginRight: 15,
   },
   buttonDesign: {
-    backgroundColor: "#B79D71",
-    width: 327,
+    backgroundColor: "#927E5A",
+    width: 280,
     height: 51,
     justifyContent: "center",
     alignSelf: "center",
-   borderRadius:5
+    borderRadius: 5,
   },
   exit: {
     alignSelf: "center",

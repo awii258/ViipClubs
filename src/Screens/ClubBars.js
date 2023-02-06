@@ -26,16 +26,7 @@ import {
   useFocusEffect,
 } from "@react-navigation/native";
 
-type Stack = {
-  YourSelf: undefined,
-  home: undefined,
-  notification: undefined,
-  Person: undefined,
-  Days: undefined,
-  Animal: undefined,
-  Forget: undefined,
-  Du: undefined,
-};
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -46,14 +37,20 @@ import { ScrollView } from "react-native-gesture-handler";
 // type AnimalProps = {
 //   navigation: NavigationAnimalProps["navigation"];
 // };
-
+const a = "Major Event"
 const ClubBars = ({ navigation, route }) => {
   const { productId, productTitle } = route.params;
+  console.log("city name bar ", productTitle)
   // const [data, setData] = useState([]);
 
-  const { state, onProfile, clearClub, clearEventsByClub, clearEventsByTowns } =
+  const { state, onProfile, clearClub, clearEventsByClub, clearEventsByTowns, onEventTown } =
     useContext(Actions);
+  console.log("subscription", state?.users)
   const [SearchAffiliate, setSearchAffiliate] = useState("");
+  const [events, setEvents] = useState([])
+  const [filteredEvents, setFilteredEvents] = useState([])
+  const [totalEvents, setTotalEvents] = useState(0)
+  const [pageCount, setPageCount] = useState(25)
 
   // console.log("................>>>>>", state.users);
   //   setData(state.users)
@@ -61,7 +58,7 @@ const ClubBars = ({ navigation, route }) => {
   const SearchAffiliate_ = () => {
     // alert("search", search);
     // const tempSearch=search;
-    onProfile(SearchAffiliate, "Bar", productTitle);
+    // onEventTown(""," "," "," ",productTitle," ","Major Event",SearchAffiliate);
     //  console.log("Search=====================================================search", SearchAffiliate);
   };
   //  console.log("Filtered Affiliates ==========================================", state.users);
@@ -89,15 +86,46 @@ const ClubBars = ({ navigation, route }) => {
   //   };
 
   useEffect(() => {
-    onProfile("", "Bar", productTitle);
+    onEventTown( productTitle, " ",SearchAffiliate);
     clearEventsByTowns();
 
     // console.log("hi");
   }, []);
 
   useEffect(() => {
-    if (SearchAffiliate === "") {
-      onProfile(SearchAffiliate, "Bar", productTitle);
+    if (state && state.cityEvents) {
+      const tempArr = state.cityEvents;
+      if (tempArr.length > 0) {
+        tempArr.sort(function (a, b) {
+          var textA = a.title.toUpperCase();
+          var textB = b.title.toUpperCase();
+          return textA < textB ? -1 : textA > textB ? 1 : 0;
+        });
+      }
+
+      setEvents(tempArr)
+      setTotalEvents(tempArr.length)
+      setFilteredEvents([...tempArr.slice(0, 25)])
+      setPageCount(25)
+    }
+
+  }, [state?.cityEvents])
+
+  useEffect(() => {
+    setFilteredEvents([...events.slice(0, pageCount)])
+  }, [pageCount])
+
+  useEffect(() => {
+    if (events.length > 0) {
+      if (SearchAffiliate) {
+        const tempArr = events.filter((item) =>
+          item.name.toLowerCase().includes(SearchAffiliate.toLowerCase())
+        );
+        setFilteredEvents(tempArr)
+      } else {
+        setFilteredEvents([...events.slice(0, 25)])
+        setPageCount(25)
+      }
     }
   }, [SearchAffiliate]);
 
@@ -137,19 +165,22 @@ const ClubBars = ({ navigation, route }) => {
           navigation.navigate("Du", {
             itemId: item.id,
             itemname: item.name,
-            itemDescription: item.description,
-            itemImages: item.images,
-            itemSaved: item.is_saved,
-            itemPhone: item.phone,
-            itemEmail: item.email,
-            itemWebsite: item.website,
-            itemPostCode: item.postcode,
-            itemlat: item.latitude,
-            itemlong: item.longitude,
-            itemCountry: item.country,
-            itemRegion: item.region,
-            itemAddress1: item.address1,
-            itemAddress2: item.address2,
+            itemDescription: item && item.description || "",
+            itemImages: item && item.images || "",
+            itemSaved:  item && item.is_saved || "",
+            itemPhone:  item && item.phone || "",
+            itemEmail:  item && item.email || "",
+            itemWebsite:  item && item.website || "",
+            itemPostCode:  item && item.postcode || "",
+            itemlat: item &&  item.latitude || "",
+            itemlong:  item && item.longitude || "",
+            itemCountry:  item && item.country || "",
+            itemRegion:  item && item.region || "",
+            itemAddress1: item &&  item.address1 || "",
+            itemAddress2:  item && item.address2 || "",
+            itemDate: item.date || "",
+            itemTime: item.time || "",
+            barname: "bar",
           });
         }}
       >
@@ -157,7 +188,7 @@ const ClubBars = ({ navigation, route }) => {
           overlayColor="#000000"
           //  "#19282F"
           overlayAlpha={0.6}
-          source={{ uri: item.images[0] }}
+          source={{ uri:  item.images[0] || ""}}
           resizeMode="cover"
           containerStyle={{
             height: 90,
@@ -195,20 +226,22 @@ const ClubBars = ({ navigation, route }) => {
                 navigation.navigate("Du", {
                   itemId: item.id,
                   itemname: item.name,
-                  itemDescription: item.description,
-
-                  itemImages: item.images,
-                  itemSaved: item.is_saved,
-                  itemPhone: item.phone,
-                  itemEmail: item.email,
-                  itemWebsite: item.website,
-                  itemPostCode: item.postcode,
-                  itemlat: item.latitude,
-                  itemlong: item.longitude,
-                  itemCountry: item.country,
-                  itemRegion: item.region,
-                  itemAddress1: item.address1,
-                  itemAddress2: item.address2,
+                  itemDescription: item &&  item.description || "",
+                  itemImages: item &&  item.images || "",
+                  itemSaved: item &&  item.is_saved || "",
+                  itemPhone: item &&  item.phone || "",
+                  itemEmail: item &&  item.email || "",
+                  itemWebsite: item &&  item.website || "",
+                  itemPostCode: item &&  item.postcode || "",
+                  itemlat: item &&  item.latitude || "",
+                  itemlong: item &&  item.longitude || "",
+                  itemCountry: item &&  item.country || "",
+                  itemRegion:  item && item.region || "",
+                  itemAddress1: item &&  item.address1 || "",
+                  itemAddress2: item &&  item.address2 || "",
+                  itemDate: item.date || "",
+                  itemTime: item.time || "",
+                  barname: "bar",
                 });
               }}
             >
@@ -235,14 +268,18 @@ const ClubBars = ({ navigation, route }) => {
     >
       <View
         style={{
+          marginTop: 20,
+
+          // paddingTop:13,
+          // paddingBottom: 8,
           // flexDirection: "row",
           // justifyContent: "center",
           // alignItems: "center",
           // padding: 30,
           // margin:0,
           // marginRight: 10,
-          paddingTop: 30,
-          paddingBottom: 30,
+          // paddingTop: 30,
+          // paddingBottom: 30,
           // alignSelf: "center",
         }}
       >
@@ -253,16 +290,22 @@ const ClubBars = ({ navigation, route }) => {
             color="#ffffff"
             style={styles.iconDesign}
           />
+          {/* <View style={{flexDirection:"row",alignItems: "center",}}> */}
           <TextInput
             style={styles.inputDesign}
-            placeholder="SEARCH EVENTS"
+            placeholder="SEARCH RESTAURANTS"
             placeholderTextColor="#ffffff"
             autoCapitalize={"words"}
-            selectionColor="#ffffff"
+            selectionColor="#927E5A"
             onChangeText={(text) => setSearchAffiliate(text)}
             onSubmitEditing={SearchAffiliate_}
             value={SearchAffiliate}
           ></TextInput>
+          {/* { SearchAffiliate ?<TouchableOpacity onPress={() =>setSearchAffiliate("")}>
+            
+            <EvilIcons name="close-o" size={26} color="#ffffff" />
+            </TouchableOpacity>:null}
+            </View> */}
           {/* <TextInput
               style={{
                 width: 365,
@@ -292,6 +335,7 @@ const ClubBars = ({ navigation, route }) => {
               }
             /> */}
         </View>
+       
       </View>
 
       {/* <View style={{ marginLeft: 10 }}>
@@ -302,19 +346,43 @@ const ClubBars = ({ navigation, route }) => {
         </Text>
       </View> */}
 
-      <ScrollView
-        contentContainerStyle={{ paddingBottom: 200 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <FlatList
-          data={state?.users}
-          keyExtractor={(item, index) => item.id.toString()}
-          initialNumToRender={1}
-          showsVerticalScrollIndicator={false}
-          renderItem={renderItem}
-          // style={{ height: 500 }}
-        />
-      </ScrollView>
+      {
+        filteredEvents.length > 0 ? (
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: 200 }}
+            showsVerticalScrollIndicator={false}
+          >
+            <FlatList
+
+              data={filteredEvents}
+              keyExtractor={(item, index) => item.id.toString()}
+              initialNumToRender={1}
+              showsVerticalScrollIndicator={false}
+              renderItem={renderItem}
+            // style={{ height: 500 }}
+            />
+            {
+              events && state?.cityEvents && filteredEvents.length !== totalEvents && !SearchAffiliate && totalEvents > 25 && (
+                <Text
+                  style={{
+                    color: "#927E5A",
+                    textAlign: "center",
+                    alignSelf: "center",
+                    marginTop: 15,
+                    fontSize: 16,
+                    fontFamily: "BaskervilleRegular",
+                  }}
+                  onPress={() => setPageCount(pageCount + pageCount)}
+                >
+                  LOAD MORE
+                </Text>
+              )
+            }
+          </ScrollView>
+        ) : (<Text>No Data Found</Text>)
+      }
+
+
     </View>
   );
 };
@@ -331,12 +399,15 @@ const styles = StyleSheet.create({
     height: 50,
   },
   iconDesign: {
-    padding: 10,
+    paddingLeft: 15,
   },
   inputDesign: {
-    flex: 1,
     fontFamily: "BaskervilleRegular",
     backgroundColor: "#B79D71",
     color: "#ffffff",
+    // width: ("95%"),
+    width: "85%",
+    height: 50,
+    paddingLeft: 10,
   },
 });

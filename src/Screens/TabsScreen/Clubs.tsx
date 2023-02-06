@@ -9,7 +9,11 @@ import {
   KeyboardAvoidingView,
   ImageBackground,
   StatusBar,
+  Linking,
 } from "react-native";
+
+import { Entypo } from "@expo/vector-icons";
+
 import React, { useState, useEffect, useContext } from "react";
 import { EvilIcons } from "@expo/vector-icons";
 import {
@@ -17,7 +21,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Context as Actions } from "../../Context/Actions";
-import {useNavigation} from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 // import ImageOverlay from "react-native-image-overlay";
 import ImageOverlay from "react-native-image-overlay";
 const data = [
@@ -35,32 +39,79 @@ const data = [
   },
 ];
 const Clubs = () => {
-  const navigation = useNavigation()
+ 
+  const navigation = useNavigation();
+  const { state, onCompetitions, onEventTown, onMultiple,verifyButton } =
+    useContext(Actions);
+
   const [search, setSearch] = useState("");
+  const [SearchAffiliate, setSearchAffiliate] = useState("");
+  const [competitions, setCompetitions] = useState([]);
+  const [filteredCompetitions, setFilteredCompetitions] = useState([]);
+
+  const SearchAffiliate_ = () => {
+    // alert("search", search);
+    // const tempSearch=search;
+    // onCompetitions(SearchAffiliate);
+    //  console.log("Search=====================================================search", SearchAffiliate);
+  };
 
   useEffect(() => {
-    onCompetitions();
+    onCompetitions("");
+
     // console.log("hi");
   }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      //  console.log(
+      //    "====================================Screen focused======================="
+      //  );
+      onCompetitions("");
+      verifyButton(false);
+    }, [])
+  );
+  useEffect(() => {
+    if (competitions) {
+      if (SearchAffiliate) {
+        const tempArr = competitions.filter((item) =>
+          item.title.toLowerCase().includes(SearchAffiliate.toLowerCase())
+        );
+        setFilteredCompetitions(tempArr);
+      } else {
+        setFilteredCompetitions(competitions);
+      }
+    }
+  }, [SearchAffiliate]);
 
-  const { state, onCompetitions } = useContext(Actions);
+  useEffect(() => {
+    if (state && state.competition) {
+      setCompetitions(state.competition);
+      setFilteredCompetitions(state.competition);
+    }
+  }, [state?.competition]);
+
   // console.log(
   //   "competition        -----  ................>>>>>",
   //   state.competition
   // );
-
+  console.log("hello competition", state?.competition);
   const renderItem = ({ item }: any) => {
     // console.log("subhan hi", item.name);
 
     return (
+      <TouchableOpacity
+        style={[styles.imageContainer, { flex: 1 }]}
+        onPress={() =>
+          Linking.openURL("https://www.instagram.com/bevipblackcard")
+        }
 
-      
-        <TouchableOpacity style={styles.imageContainer} onPress={() => navigation.navigate("Competition Detail", {
-        image: item.image,
-        title: item.title,
-        content: item.content,
-        link:item.link
-      })}>
+        //   onPress={() => navigation.navigate("Competition Detail", {
+        //   image: item.image,
+        //   title: item.title,
+        //   content: item.content,
+        //   link:item.link
+        // })}
+      >
         {/* <Text style={{ color: "white" }}>YO</Text> */}
         <StatusBar
           translucent
@@ -68,65 +119,112 @@ const Clubs = () => {
           barStyle="light-content"
         />
         <ImageOverlay
-         
           overlayColor="#000000"
           //  "#19282F"
           overlayAlpha={0.8}
           source={{ uri: item.image }}
           containerStyle={styles.imageStyle}
           resizeMode="cover"
-          
         >
-          <View style={{ padding: 10, alignSelf: "center" }}>
-            <Text
-              style={[
-                styles.textStyle,
-                { marginTop: hp("1%"), color: "#927E5A" },
-              ]}
+          <View style={{}}>
+            <View
+              style={{
+                flex: 1,
+
+                // flexDirection:"row",
+
+                // padding:5,
+                // margin:20
+                paddingBottom: 15,
+                paddingTop: 0,
+                paddingLeft: 30,
+                paddingRight: 30,
+                // backgroundColor:'red'
+              }}
             >
-              {item.title}
-            </Text>
-            <Text style={[styles.textStyle, { marginTop: hp("10%") }]}>
-              {item.content}
-            </Text>
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Text
+                  style={[
+                    styles.textStyle1,
+                    { marginTop: hp("2%"), color: "#927E5A" },
+                  ]}
+                >
+                  {item.title}
+                </Text>
+                {/* <View style={{marginBottom:hp("1%"),marginTop:hp("5%"),alignSelf:"center",}}>
+          <TouchableOpacity
+              style={styles.QueueBtn}
+              onPress={() =>
+                Linking.openURL("https://www.instagram.com/bevipblackcard")
+              }
+            >
+            
+              <Text style={{  fontFamily: "OpenSansRegular",}}>Enter Competition</Text>
+            </TouchableOpacity></View> */}
+                <Text style={[styles.textStyle, {}]}>{item.content}</Text>
+              </View>
+              <View
+                style={{
+                  marginBottom: hp("2%"),
+                  marginTop: hp("2%"),
+                  alignSelf: "center",
+                }}
+              >
+                <TouchableOpacity
+                  style={styles.QueueBtn}
+                  onPress={() =>
+                    Linking.openURL("https://www.instagram.com/bevipblackcard")
+                  }
+                >
+                  <Text style={{ fontFamily: "OpenSansRegular" }}>
+                    Enter Competition
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
-
         </ImageOverlay>
-
       </TouchableOpacity>
-     
-
-      
     );
   };
 
   return (
     <View style={styles.container}>
-
-      
-      <View style={{paddingTop:30, paddingBottom:30}}>
-      <View style={styles.inputView}>
+      <View
+        style={{
+          marginTop: 20,
+          // paddingTop:13,
+          // paddingBottom: 8,
+          // paddingTop:30, paddingBottom:30
+        }}
+      >
+        <View style={styles.inputView}>
           <EvilIcons
             name="search"
             size={24}
             color="#ffffff"
             style={{ paddingLeft: 15 }}
           />
-          <TextInput
-            style={styles.inputDesign}
-            placeholder="SEARCH COMPETITIONS"
-            placeholderTextColor="#ffffff"
-            autoCapitalize={"words"}
-            selectionColor="#927E5A"
-            onChangeText={(text) => setSearch(text)}
-            value={search}
-          ></TextInput>
+          {/* <View style={{ flexDirection: "row", alignItems: "center" }}> */}
+            <TextInput
+              style={styles.inputDesign}
+              placeholder="SEARCH COMPETITIONS"
+              placeholderTextColor="#ffffff"
+              autoCapitalize={"words"}
+              selectionColor="#927E5A"
+              onChangeText={(text) => setSearchAffiliate(text)}
+              onSubmitEditing={SearchAffiliate_}
+              value={SearchAffiliate}
+            ></TextInput>
+            {/* {SearchAffiliate ? (
+              <TouchableOpacity onPress={() => setSearchAffiliate("")}>
+                <EvilIcons name="close-o" size={26} color="#ffffff" />
+              </TouchableOpacity>
+            ) : null}
+          </View> */}
         </View>
       </View>
-      
-     
-        
-      
+
       {/* <KeyboardAvoidingView enabled={true}
     behavior={Platform.OS === "ios" ? "padding" : "height"}
     style={{ flex: 1 }}>
@@ -139,7 +237,7 @@ const Clubs = () => {
       >
         <FlatList
           inverted
-          data={state.competition}
+          data={filteredCompetitions}
           keyExtractor={(item, index) => index.toString()}
           initialNumToRender={1}
           showsVerticalScrollIndicator={false}
@@ -161,7 +259,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    padding: 30,
+    // padding: 30,
     // padding:0,
     // paddingTop:30,
     // paddingBottom:25,
@@ -169,39 +267,45 @@ const styles = StyleSheet.create({
     // marginRight:"1%",
     // width: wp("93%"),
     // // margin:"auto",
-    alignSelf: "center",
+    // alignSelf: "center",
   },
   textStyle: {
     color: "#FFFFFF",
     fontFamily: "BaskervilleRegular",
     fontSize: 16,
+    // textAlign:"right"
+    textAlign: "center",
+  },
+  textStyle1: {
+    color: "#FFFFFF",
+    fontFamily: "BaskervilleRegular",
+    fontSize: 20,
+    marginBottom: 5,
+    textAlign: "center",
+    textTransform: "uppercase",
   },
   imageContainer: {
     // alignItems:"center",
     // margin: 10,
-    
     // paddingRight:40,
     // margin:0,
     // margin:0,
-    
-    width:"100%"
+    // width:"100%"
     // height:360,
     // width: wp("100%"),
     // backgroundColor:"red",
     // height:260
-
   },
   imageStyle: {
-    height: 290,
+    height: 300,
     // width:"auto"
-    
-    width:"100%"
+    marginTop: 20,
+    width: "100%",
     // width: wp("93%"),
     // margin:0,
     // padding:30
   },
   inputView: {
-    
     flexDirection: "row",
     // justifyContent: "center",
     alignItems: "center",
@@ -210,9 +314,30 @@ const styles = StyleSheet.create({
   inputDesign: {
     fontFamily: "BaskervilleRegular",
     backgroundColor: "#B79D71",
-    color: "#424242",
-    width: "100%",
+    color: "#ffffff",
+    width: "85%",
     height: 50,
     paddingLeft: 10,
+  },
+  // QueueBtn: {
+  //   height: 35,
+  //   backgroundColor: "#927E5A",
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   borderRadius: 5,
+  //   // marginTop: 10,
+  //   // paddingRight:5,
+  //   // paddingLeft:5
+  // },
+  QueueBtn: {
+    width: 150,
+    height: 35,
+    backgroundColor: "#927E5A",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    paddingTop: 5,
+    paddingBottom: 5,
+    // marginTop: 7,
   },
 });

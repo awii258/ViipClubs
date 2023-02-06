@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
-import MapView, { Callout, PROVIDER_GOOGLE } from "react-native-maps";
+import React, { useContext, useState, useEffect, useRef } from "react";
+import MapView, { Callout, PROVIDER_GOOGLE, Circle } from "react-native-maps";
 import { Marker } from "react-native-maps";
 // import Marker from "react-native-maps";
 import {
@@ -13,14 +13,51 @@ import {
   TouchableOpacity,
   View,
   Button,
+  Platform,
 } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  interpolate,
+  withTiming,
+  Easing,
+  Extrapolate,
+  withRepeat,
+} from "react-native-reanimated";
 
 import * as Location from "expo-location";
 import { Alert } from "native-base";
 // import{PROVIDER_GOOGLE} from 'react-native-maps'
 // import { Marker } from "react-native-svg";
 const height = Dimensions.get("window").height;
+const Pulse = ({ repeat }) => {
+  const animation = useSharedValue(0);
 
+  // We repeatedly doing shared value from 0 to 1
+  useEffect(() => {
+    animation.value = withRepeat(
+      withTiming(1, {
+        duration: 2000,
+        easing: Easing.linear,
+      }),
+      -1,
+      false
+    );
+  }, []);
+  const animatedStyles = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      animation.value,
+      [0, 1],
+      [0.6, 0],
+      Extrapolate.CLAMP
+    );
+    return {
+      opacity: opacity,
+      transform: [{ scale: animation.value }],
+    };
+  });
+  return <Animated.View style={[styles.circle, animatedStyles]} />;
+};
 const MapAccess = ({ latitude, longitude }) => {
   console.log("main map screen", latitude, longitude);
 
@@ -125,7 +162,24 @@ const MapAccess = ({ latitude, longitude }) => {
   );
   //   const borderRadiusValue = 200 + final_pixels / 2
   console.log("BorderRadiusValue: ", borderRadiusValue);
+  const ref = React.useRef();
 
+  // function onLayoutPolygon() {
+  //   if (ref.current) {
+  //     ref.current.setNativeProps({ fillColor: "rgba(176,213,162,1)", strokeColor:"rgba(146,126,90,1)"});
+  //   }
+  //   // call onLayout() from the props if you need it
+  // }
+  const[col, setCol] =useState('')
+  useEffect(()=>{
+    if(Platform.OS === 'ios'){
+      setCol("rgba(176,213,162,1)")
+    }else{
+      setCol("rgba(176,213,162,1)")
+    }
+
+  },[Platform.OS])
+  // const a = Platform.OS === 'ios' ? "rgba(176,213,162,1)":
   return (
     <View
       style={{
@@ -156,6 +210,14 @@ const MapAccess = ({ latitude, longitude }) => {
           //   title={marker.title}
           //   description={Marker.description}
         />
+        <Circle
+          // onLayout={onLayoutPolygon}
+          center={{ latitude: latitude, longitude: longitude }}
+          radius={350}
+          strokeWidth={1}
+          strokeColor={"rgba(146,126,90,1)"}
+          fillColor={col}
+        />
       </MapView>
     </View>
   );
@@ -181,6 +243,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,
+    backgroundColor: "#927E5A",
+  },
+  circle: {
+    width: 400,
+    borderRadius: 150,
+    height: 400,
+    position: "absolute",
+    borderColor: "#927E5A",
+    borderWidth: 4,
     backgroundColor: "#927E5A",
   },
 });

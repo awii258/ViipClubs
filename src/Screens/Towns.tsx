@@ -25,6 +25,7 @@ import {
   ScrollView,
   LogBox,
   StatusBar,
+  Button,
 } from "react-native";
 
 type Stack = {
@@ -40,6 +41,10 @@ type Stack = {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Entypo } from "@expo/vector-icons";
 import ImageOverlay from "react-native-image-overlay";
+import { Item } from "react-native-paper/lib/typescript/components/List/List";
+import Clubs from "./TabsScreen/Clubs";
+
+// import { Button } from "native-base";
 
 const Stack = createNativeStackNavigator<Stack>();
 
@@ -50,37 +55,151 @@ type AnimalProps = {
 };
 
 const Towns = ({ navigation, props }: AnimalProps) => {
+ 
   //  const [masterDataSource, setMasterDataSource] = useState([]);
   // const [filteredDataSource, setFilteredDataSource] = useState([]);
 
-  const { state, onAffiliate, clearOnProfile } = useContext(Actions);
+  const { state, onAffiliate, clearOnProfile,verifyButton,onAffiliates } = useContext(Actions);
   const [SearchTown, setSearchTown] = useState("");
+  const [userType, setUserType] = useState("user type");
+  const [pageCount, setPageCount] = useState(1);
+  const [pageLength, setPageLength] = useState(25);
+  const [towns, setTowns] = useState([]);
+  const [firstRender, setFirstRender] = useState(true);
+  const [temptown, setTempTown] = useState([]);
+  const [filteredTowns, setFilteredTowns] = useState([]);
+  const [totalCountTowns, setTotalCountTowns] = useState(0);
 
-  console.log(
-    "Checking Acess>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-  );
-  if (state.pro.data.tier.name === "Free Membership") {
+  // console.log(
+  //   "Checking Acess>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+  // );
+
+  const checkSubscription = async () => {
+    const subscription = await AsyncStorage.getItem("user-type");
+    setUserType(subscription);
+  };
+
+  useEffect(() => {
+    checkSubscription();
+  }, []);
+
+  if (!userType || userType.includes("Free Membership")) {
     navigation.navigate("Subscription");
   }
 
   const SearchTown_ = () => {
     // alert("search", search);
     // const tempSearch=search;
-    onAffiliate(SearchTown);
+
+    // onAffiliate(SearchTown, "", "", "clubs");
+    // setTowns([]);
+
     // console.log("Search=====================================================searchTown", SearchTown);
   };
-  // console.log("Filtered towns=======================================",state.towns);
-  useEffect(() => {
-    onAffiliate();
-    clearOnProfile();
-    // console.log("hi");
-  }, []);
 
   useEffect(() => {
-    if (SearchTown === "") {
-      onAffiliate("");
+    if (towns.length > 0) {
+      if (SearchTown) {
+        const tempArr = towns.filter((item) =>
+          item.name.toLowerCase().includes(SearchTown.toLowerCase())
+        );
+        setFilteredTowns(tempArr);
+      } else {
+        setFilteredTowns([...towns.slice(0, 25)])
+        setPageLength(25)
+      }
     }
   }, [SearchTown]);
+
+  // console.log("Filtered towns=======================================",state.towns);
+  // useEffect(() => {
+  //   // clearOnProfile();
+  //   onAffiliate("", "", "", "clubs");
+  //   // console.log("hi");
+  // }, [pageCount, pageLength]);
+  // useEffect(()=>{
+
+  //   // if(SearchTown !==""){
+  //   //   onAffiliate(SearchTown,"","","clubs");
+  //   //   setTowns([])
+  //   // }
+
+  //     // onAffiliate("", pageCount, pageLength,"clubs");
+  //     //     setTowns([])
+
+  // },[SearchTown,])
+
+  // useEffect(() => {
+  //   // if(firstRender){
+  //   //   setFirstRender(false)
+  //   // }
+  //   if (state && state.towns) {
+  //     console.log("if condition inside", state.towns);
+  //     const tempArr = firstRender ? [] : state.towns;
+  //     setTempTown(tempArr);
+  //     // console.log("showing tempArr: ", tempArr)
+  //     let tempSortArr = [...towns, ...tempArr];
+  //     tempSortArr = tempSortArr;
+  //     tempSortArr = tempSortArr.sort(function (a, b) {
+  //       var textA = a.name.toUpperCase();
+  //       var textB = b.name.toUpperCase();
+  //       return textA < textB ? -1 : textA > textB ? 1 : 0;
+  //     });
+  //     setTowns(tempSortArr);
+  //     setFirstRender(false);
+  //   }
+  //   //     if(state && state.towns && SearchTown !== ""){
+  //   //       const tempArr = firstRender ? [] : state.towns
+  //   //       console.log("showing tempArr: ", tempArr)
+  //   //       let tempSortArr = [...towns, ...tempArr]
+  //   // tempSortArr = tempSortArr.sort((a, b) => a.name.toLowerCase() < b.name.toLowerCase() ? -1 : a.name.toLowerCase() > b.name.toLowerCase() ? 1  : 0)
+  //   //       setTowns(tempSortArr )
+  //   //       setFirstRender(false)
+
+  //   //     }
+
+  //   // console.log("towns are changed")
+  // }, [state?.towns]);
+
+  useEffect(() => {
+    if (state && state.towns) {
+      const tempArr = state.towns;
+      tempArr.sort(function (a, b) {
+        var textA = a.name.toUpperCase();
+        var textB = b.name.toUpperCase();
+        return textA < textB ? -1 : textA > textB ? 1 : 0;
+      });
+      setTowns(tempArr);
+      setTotalCountTowns(tempArr.length);
+      setFilteredTowns([...tempArr.slice(0, 25)]);
+      setPageLength(25)
+    }
+  }, [state?.towns]);
+
+  useEffect(() => {
+    setFilteredTowns([...towns.slice(0, pageLength)]);
+  }, [pageLength]);
+
+  // useEffect(() => {
+  //   const tempArr = [];
+  //   let tempCountFirst = pageCount - 1;
+  //   tempCountFirst = tempCountFirst + pageLength;
+
+  //   // setFilteredTowns()
+  // }, [pageCount, pageLength]);
+
+  useEffect(() => {
+    onAffiliate(SearchTown, "", "", "clubs");
+  
+    // setFirstRender(false)
+  }, []);
+
+  // useEffect(() => {
+  //   if (SearchTown === "") {
+  //     onAffiliate("", pageCount, pageLength,"clubs");
+  //     setTowns([])
+  //   }
+  // }, [SearchTown]);
   // useEffect(() => {
   //   LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
   // }, []);
@@ -169,17 +288,32 @@ const Towns = ({ navigation, props }: AnimalProps) => {
 
   const [search, setSearch] = useState("");
 
+  // useEffect(()=>{
+  //   if(firstRender && towns.length > 0){
+  //     setTowns([...towns.slice(0,3)])
+  //     setFirstRender(false)
+  //   }
+  // },[])
+
   useFocusEffect(
     React.useCallback(() => {
       //  console.log(
       //    "====================================Screen focused======================="
       //  );
       clearOnProfile();
+      verifyButton(false)
     }, [])
   );
 
+  console.log("the array of town", towns.length);
+
+  // console.log("is this array",state.towns.sort((a, b) => a.name.toLowerCase() < b.name.toLowerCase() ? -1 : a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.lastname.toLowerCase() < b.lastname.toLowerCase() ? -1 : a.lastname.toLowerCase() > b.lastname.toLowerCase() ? 1 : 0))
+
   const renderItem = ({ item }: any) => {
     // console.log("subhan hi", item.name);
+    // const abc=[];
+    // abc.push(item.name);
+    // console.log ('arry of name',  Array.isArray(item))
 
     return (
       <TouchableOpacity
@@ -205,6 +339,7 @@ const Towns = ({ navigation, props }: AnimalProps) => {
             height: 90,
             width: 414,
             marginTop: 20,
+            // paddingBottom: 100,
             flex: 1,
           }}
         >
@@ -253,6 +388,8 @@ const Towns = ({ navigation, props }: AnimalProps) => {
     );
   };
 
+  // console.log("showing towns: ", towns)
+
   // const getItem = (item) => {
   //   Alert.alert(item.extra);
   // };
@@ -266,13 +403,15 @@ const Towns = ({ navigation, props }: AnimalProps) => {
     >
       <View
         style={{
-          paddingTop: 30,
-          paddingBottom: 30,
+          marginTop: 20,
+          // paddingTop:13,
+          // paddingBottom: 8,
           // flexDirection: "row",
           // justifyContent: "center",
           // alignItems: "center",
           // padding: 30,
           // alignSelf:"center",
+          // marginBottom:10
         }}
       >
         <View style={styles.inputView}>
@@ -282,17 +421,22 @@ const Towns = ({ navigation, props }: AnimalProps) => {
             color="#ffffff"
             style={{ paddingLeft: 15 }}
           />
+          {/* <View style={{flexDirection:"row",alignItems: "center",}}> */}
           <TextInput
             style={styles.inputDesign}
             placeholder="SEARCH CITY"
             placeholderTextColor="#ffffff"
             autoCapitalize={"words"}
-            selectionColor="#ffffff"
+            selectionColor="#927E5A"
             onChangeText={(text) => setSearchTown(text)}
             onSubmitEditing={SearchTown_}
             value={SearchTown}
           ></TextInput>
-
+          {/* { SearchTown ?<TouchableOpacity onPress={() =>setSearchTown("")}>
+            
+            <EvilIcons name="close-o" size={26} color="#ffffff" />
+            </TouchableOpacity>:null}
+            </View> */}
           {/* <TextInput
               style={{
               
@@ -338,13 +482,29 @@ const Towns = ({ navigation, props }: AnimalProps) => {
         showsVerticalScrollIndicator={false}
       >
         <FlatList
-          data={state.towns}
+          data={filteredTowns}
           keyExtractor={(item, index) => index.toString()}
           initialNumToRender={1}
           showsVerticalScrollIndicator={false}
           renderItem={renderItem}
           // style={{ height: 500 }}
         />
+
+        {towns && state?.towns && filteredTowns.length !== totalCountTowns && !SearchTown && totalCountTowns > 25 && (
+          <Text
+            style={{
+              color: "#927E5A",
+              textAlign: "center",
+              alignSelf: "center",
+              marginTop: 15,
+              fontSize: 16,
+              fontFamily: "BaskervilleRegular",
+            }}
+            onPress={() => setPageLength(pageLength + pageLength)}
+          >
+            LOAD MORE
+          </Text>
+        )}
       </ScrollView>
     </View>
   );
@@ -363,7 +523,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#B79D71",
     color: "#ffffff",
     // width: ("95%"),
-    width: "100%",
+    width: "85%",
     height: 50,
     paddingLeft: 10,
   },

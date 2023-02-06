@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useEffect, useContext, useState } from "react";
+import SelectList from "react-native-dropdown-select-list";
 import { AntDesign } from "@expo/vector-icons";
 import moment from "moment";
 import CalendarStrip from "react-native-calendar-strip";
@@ -15,19 +16,24 @@ import { Feather } from "@expo/vector-icons";
 import { Context as Actions } from "../Context/Actions";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
+import Spinner from 'react-native-loading-spinner-overlay';
+import { FontAwesome } from "@expo/vector-icons";
+import Calender from "../../src/Calender";
 
 const PromotionScreen = ({ HEIGHT }) => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { state, onEvents, onEventByTowns } = useContext(Actions);
+  const { state, onEvents, onEventByTowns, } = useContext(Actions);
 
   //  const {title } = route.params.productTitle;
   const { productTitle } = route.params;
   let town = productTitle;
-
+  const [selected, setSelected] = React.useState("");
   const [select, setSelect] = useState(true);
   const [showEvents, setShowEvents] = useState([]);
   const [firstRun, setFirstRun] = useState(true);
+  const[isLoading, setIsLoading] = useState(true)
+
 
   useEffect(() => {
     //  onEvents();
@@ -38,6 +44,7 @@ const PromotionScreen = ({ HEIGHT }) => {
     // );
     // setShowEvents([]);
     onEventByTowns(productTitle);
+    // verifyButton (true);
     // console.log(
     //   "Towns==============================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>towns",
     //   town
@@ -47,6 +54,22 @@ const PromotionScreen = ({ HEIGHT }) => {
     // );
   }, [productTitle]);
 
+//   const [currentDate, setCurrentDate] = useState('');
+//   const monthNames = ["January", "February", "March", "April", "May", "June",
+//   "July", "August", "September", "October", "November", "December"
+// ];
+// useEffect(()=>{
+// const dates= new Date().getDate()
+// const Month= monthNames[new Date().getMonth()]
+// const Years= new Date().getFullYear()
+// setCurrentDate(dates+Month+Years);
+// },[])
+
+//   const data = [
+//       { value: "Today" },
+//       { value: "This Week" },
+//       { value: "This Month" },
+//     ];
   // console.log(
   //   " event events ..................................>>>>>",
   //   state.eventTown
@@ -99,9 +122,9 @@ const PromotionScreen = ({ HEIGHT }) => {
   // }
 
   useEffect(() => {
-    if (state?.eventTown && state?.eventTown.length > 0) {
+    if (state && state.eventTown) {
       const userArray = state?.eventTown;
-      // console.log(
+      // console.log( 
       //   "Inside first run if============================================================"
       // );
       const todaydate = new Date();
@@ -109,8 +132,26 @@ const PromotionScreen = ({ HEIGHT }) => {
       selectCurrentDate(todaydate, userArray);
       // console.log("show events==========", showEvents);
       // setFirstRun(false);
+      setIsLoading(false)
     }
   }, [state?.eventTown]);
+  
+  if(isLoading){
+    return (
+      <Spinner   
+      //visibility of Overlay Loading Spinner
+      visible={isLoading}
+      color={"#927E5A"}
+      //Text with the Spinner
+      textContent={'Loading...'}
+      //Text style of the Spinner Text
+      textStyle={styles.spinnerTextStyle}
+    />
+    )
+  }
+
+ 
+       
 
   // console.log("=======================================", state.eventTown);
 
@@ -119,6 +160,8 @@ const PromotionScreen = ({ HEIGHT }) => {
 
     return (
       <>
+      
+
         {/* <Text style={{color:"white"}}>YO</Text> */}
         <TouchableOpacity
           onPress={() =>
@@ -129,7 +172,7 @@ const PromotionScreen = ({ HEIGHT }) => {
               time: item.time,
               date: item.date,
               website: item.affiliate.website,
-              affiliateId: item.affiliate.id
+              affiliateId: item.affiliate.id  
             })
           }
           style={{ flex: 1 }}
@@ -224,17 +267,27 @@ const PromotionScreen = ({ HEIGHT }) => {
     {
       //currentDate= new Date().toDateString();
       start: moment(),
-      end: moment().add(30, "days"), // total 4 days enabled
+      end: moment().add(12, "month"), // total 4 days enabled
     },
   ];
 
   // let datesBlacklist = [moment().add(3, 'days')]; // 1 day disabled
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1}}>
+    
+
+
       <View style={{ height: 70, marginBottom: 15 }}>
         <CalendarStrip
           selectedDate={new Date()}
+        
+          
+          
+          // showDayNumber={false}
+          // showDayName={false}
+          // showDate={false}
+          // showMonth={true}
           // highlightColor={"red"}
           calendarAnimation={{ type: "sequence", duration: 30 }}
           daySelectionAnimation={{
@@ -242,14 +295,16 @@ const PromotionScreen = ({ HEIGHT }) => {
             duration: 200,
             highlightColor: "rgba(146, 126, 90, 0.3)",
           }}
+         
           style={{ height: 100, paddingTop: 20, paddingBottom: 10 }}
           calendarHeaderStyle={{
             color: "#927E5A",
             fontFamily: "OpenSansRegular",
+            fontSize:20
           }}
           calendarColor={"#000000"}
-          dateNumberStyle={{ color: "white", fontFamily: "OpenSansRegular" }}
-          dateNameStyle={{ color: "white", fontFamily: "OpenSansRegular" }}
+          dateNumberStyle={{ color: "white", fontFamily: "OpenSansRegular", }}
+          dateNameStyle={{ color: "white", fontFamily: "OpenSansRegular", }}
           highlightDateNumberStyle={{
             color: "white",
             fontFamily: "OpenSansRegular",
@@ -266,12 +321,14 @@ const PromotionScreen = ({ HEIGHT }) => {
             color: "white",
             fontFamily: "OpenSansRegular",
           }}
+        
           scrollable={true}
-          iconContainer={{ flex: 0.1 }}
+          iconContainer={{ flex: 0.1}}
           onDateSelected={selectDate}
+         
         />
       </View>
-      {/* <Text style={{color:"white",backgroundColor:"red",fontSize:15}}>{town}</Text> */}
+      
       <View style={{ flex: 1 }}>
         <ScrollView
           style={{ flex: 1 }}
@@ -289,6 +346,7 @@ const PromotionScreen = ({ HEIGHT }) => {
           />
         </ScrollView>
       </View>
+      
     </View>
   );
 };
@@ -300,6 +358,9 @@ const styles = StyleSheet.create({
     color: "#927E5A",
     fontFamily: "OpenSansRegular",
     fontSize: 16,
+  },
+  spinnerTextStyle: {
+    color: '#927E5A',
   },
   listContainer: {
     flexDirection: "row",

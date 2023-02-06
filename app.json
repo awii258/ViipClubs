@@ -1,17 +1,23 @@
 {
   "expo": {
+    "owner": "hssnlki",
     "name": "Be VIP",
     "slug": "be-vip",
-    "version": "6.0.0",
+    "version": "8.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     
     "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash_2.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
      "plugins": [
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app accesses your photos to  you upload  profile picture."
+          "photosPermission": "The app accesses your photos to upload your profile picture."
         }
       ]
     ],
@@ -29,19 +35,23 @@
       },
       "bundleIdentifier": "com.awii.vip",
      
-      "buildNumber": "2.3",
+      "buildNumber": "5.2",
       "infoPlist": {
-        "NSCameraUsageDescription": "This app uses the camera to scan barcodes on event tickets.",
+        "NSCameraUsageDescription": "This app uses the camera to take profile pictures.",
         "NSPhotoLibraryAddUsageDescription": "This app requires access to the photo library so that users can upload their profile picture.",
-        "NSPhotoLibraryUsageDescription": "This app requires access to the photo library so that users can upload their profile picture."
+        "NSPhotoLibraryUsageDescription": "This app requires access to the photo library so that users can upload their profile picture.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription":"This app requires access to the location for better experience on Queue jump",
+        "NSLocationAlwaysUsageDescription":"This app requires access to the location for better experience on Queue jump",
+        "NSLocationWhenInUseUsageDescription":"This app requires access to the location for better experience on Queue jump"
       }
     },
     "platforms": [
       "ios",
       "android"
+     
     ],
     "android": {
-      "package": "com.awii.vip",
+      "package": "com.vip.vip",
       "permissions": [
         "ACCESS_FOREGROUND_LOCATION",
         "ACCESS_COARSE_LOCATION",

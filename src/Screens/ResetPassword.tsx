@@ -110,10 +110,11 @@ const ResetPassword = ({ navigation }: LoginScreenProps) => {
             >
               <Text
                 style={{
-                  alignSelf: "center",
-                  fontSize: 20,
-                  fontWeight: "600",
-                  color: "black",
+                  color: "#ffff",
+    fontFamily: "OpenSansRegular",
+    fontSize: 16,
+    alignSelf: "center"
+                  
                 }}
               >
                 Reset My Password

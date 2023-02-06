@@ -6,12 +6,14 @@ import LoginScreen from "../Screens/LoginScreen/LoginScreen";
 import { Context as Action } from "../Context/Actions";
 import Tabs from "./Tabs";
 import Actions from "../Screens/TabsScreen/Action";
-import ProfileScreen from "../Screens/ProfileScreen";
+import ProfileScreen from "../EditScreen/EditProfile";
+
 
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SubscriptionsMember from "../Screens/Subscriptions/SubscriptionsMember";
-import HeaderIcon from "../Components/HeaderIcon";
+import HeaderIcon from "../Components/HeaderIcon"
+
 const Stack = createNativeStackNavigator();
 
 export default function AuthNavigation() {
@@ -24,7 +26,7 @@ export default function AuthNavigation() {
 
   const navigation = useNavigation();
 
-  // console.log()
+  // console.log()       
   const getToken = async () => {
     let token = null;
     try {
@@ -72,10 +74,13 @@ export default function AuthNavigation() {
   //  console.log("TOKEN VALUE >>>>>>>>>>>>", tokens);
   //     }
 
+
   return (
-    
+
     <Stack.Navigator initialRouteName="Home"> 
+  
       {state?.loadtoken || state?.token ? (
+         
          
         <Stack.Screen
           name="Dull"
@@ -109,9 +114,9 @@ export default function AuthNavigation() {
         
         
       )}
-       
+          
     </Stack.Navigator>
-    
+   
     
   );
 }

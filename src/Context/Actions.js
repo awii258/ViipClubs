@@ -9,13 +9,13 @@ import {
 } from "@react-navigation/native";
 
 
-import Vip from "../api/Vip"
+import Vip from "../Context/Vip"
 import { ERROR, ONLOGOUT } from './Types'
 import axios from "axios";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { setCredentials, getCredentials } from './AuthCredentials'
-
+// import axios from 'axios'
 
 
 
@@ -24,17 +24,29 @@ const onSignin =
   (dispatch) =>
 
     async ({ email, password }) => {
-      // console.log(">?>?>",email,password)
+      console.log(">?>?>",email,password)
+     
+      // console.log("remememme",abc)
+      
       const body = JSON.stringify({ email, password })
       const config = { headers: { "Content-Type": "application/json" } };
+      // const rememberMeSetting = await AsyncStorage.getItem("remember-me");
+      // const abc =JSON.parse(rememberMeSetting)
+      // if(abc === true){
+      //   await AsyncStorage.setItem("lase-user-email", email);}
+      //   if(abc === true){
+      //   await AsyncStorage.setItem("user-password", password);}
+   
+     
       try {
         const response = await Vip.post("/api/external/auth/login", body, config);
-        await AsyncStorage.setItem("lase-user-email", email);
+        // await AsyncStorage.setItem("lase-user-email",JSON.stringify(email));
         // await AsyncStorage.setItem("token",response.data.access_token);
-        setCredentials({ access_token: response.data.access_token, refresh_token: response.data.refresh_token })
+        await setCredentials({ access_token: response.data.access_token, refresh_token: response.data.refresh_token })
         // console.log("emaillllllllllllll",email)
         // console.log("my token>>>>>>>>>0", response.data.access_token);
-        const access = await response.data.access_token
+        const access = await JSON.stringify(response.data.refresh_token)
+        console.log("hello tis is accesssss",access)
         dispatch({ type: "LOGIN", payload: response.data });
 
         //  dispatch({ type: "RESTORE_TOKEN", payload: access });
@@ -48,24 +60,81 @@ const onSignin =
         });
       }
     };
+    // const onRefresh =
+
+    // (dispatch) =>
+  
+    //   async () => {
+ 
+       
+    //     // console.log("remememme",abc)
+    //     // const token ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvc2VydmljZS5tYW5hZ2UuYmUtdmlwLmNvbVwvYXBpXC9leHRlcm5hbFwvYXV0aFwvbG9naW4iLCJpYXQiOjE2NzUyNDEwMzIsImV4cCI6MTY3NTI0NDYzMiwibmJmIjoxNjc1MjQxMDMyLCJqdGkiOiJnaDNrR1RPc2s2eHZUVm9EIiwic3ViIjoxMiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.DYsStJ5c-7dmHQefvT6KztH9yfizvN6TCg6Pc6px6HY"
+    //     const body =JSON.stringify("0a47fa80d1450b42c182e41b4250fad747a5b624")
+    //     const config = { headers: {   Accept: 'application/json',"Content-Type": "application/json" } };
+    //     const { refresh_token: token } = await getCredentials()
+       
+    //     try {
+    //       const response = await fetch(
+    //         "https://service.manage.be-vip.com/api/external/auth/refresh",
+    //         {
+    //           method: "POST",
+             
+    //           headers: {
+    //             Accept: "application/json",
+    //             "Content-Type": "application/json",
+              
+    //           },
+    //           body: {
+    //             token:JSON.stringify(token) ,
+               
+    //           },
+    //         }
+    //       );
+    //       let json = await response.json()
+    //     console.log("hello tihsihsdhfisdfh",json )
+    //       //  console.log("emaillllllllllllll", email);
+    //       //  console.log("my token>>>>>>>>>0", response.data.access_token);
+    //       //  const access = await response.data.access_token;
+    //       // console.log("After successfully updating image >>>>>>>>>>>>>>>>>>>", response)
+    //       //  dispatch({ type: "onUpdateImage", payload: response.data });
+  
+    //       // navigation.navigate("Profile");
+    //     } catch (err) {
+    //       console.log("bugs>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>on update image", err.message);
+    //       alert("Invalid Credentials", err.message);
+    //       dispatch({
+    //         type: "ERROR",
+    //         payload: "Invalid Credentials",
+    //       });
+    //     }
+    //   };
+
+const verifyButton = (dispatch)=> (Value)=>
+{
+ dispatch({ type: "VERIFYS", payload:Value  });
+}
+
+
 const onUpdate =
   (dispatch) =>
-    async ({ first, last, email, date }) => {
-      // console.log(">?>?>", first,last,email,date);
-      const body = JSON.stringify({
+  
+    async ({ first, last, email,phone,location, date,destination }) => {
+      console.log(">?>?>", first,last,email,location,date,destination);
+      const body = {
         first_name: first,
         last_name: last,
         email,
+        phone,
+        location,
         date_of_birth: date,
-      });
+        destination_id: destination,
+      }
+      const { access_token: token } = await getCredentials()
+      console.log("token111",token)
       // const body = new FormData()
-      const config = { headers: { "Content-Type": "application/json" } };
+      const config = { headers: { "Content-Type": "application/json",  Authorization: "Bearer" + token,} };
       try {
-        const response = await Vip.put(
-          "/api/external/auth/me",
-          body,
-          config
-        );
+        const response =  await axios.put("https://service.manage.be-vip.com/api/external/auth/me",body,config)
 
 
         // console.log("emaillllllllllllll", email);
@@ -109,7 +178,7 @@ const onUpdateImage =
 
       try {
         const response = await fetch(
-          "https://be-vip-service-slxus.ondigitalocean.app/api/external/auth/image",
+          "https://service.manage.be-vip.com/api/external/auth/image",
           {
             method: "POST",
             body: formBody,
@@ -191,7 +260,7 @@ const onGetProfile = (dispatch) => async () => {
   try {
     //  console.log("skdfjksdjfsdjfkds")
     const response = await fetch(
-      "https://be-vip-service-slxus.ondigitalocean.app/api/external/auth/me",
+      "https://service.manage.be-vip.com/api/external/auth/me",
       {
         method: "GET",
         headers: {
@@ -234,7 +303,7 @@ const onNew = (dispatch) => async () => {
   try {
     // console.log("skdfjksdjfsdjfkds");
     const response = await fetch(
-      "https://be-vip-service-slxus.ondigitalocean.app/api/external/auth/me",
+      "https://service.manage.be-vip.com/api/external/auth/me",
       {
         method: "GET",
         headers: {
@@ -245,6 +314,10 @@ const onNew = (dispatch) => async () => {
       }
     );
     const data = await response.json();
+    const userType = data.data.tier.name || ""
+    console.log("user type: ", userType)
+
+    await AsyncStorage.setItem("user-type", userType);
     const current = data;
     dispatch({ type: "PRO", payload: current });
     // console.log(data);
@@ -253,7 +326,7 @@ const onNew = (dispatch) => async () => {
     // alert(`actions failed: ${err || err.message}`)
   }
 };
-const onProfile = (dispatch) => async (search, type = "", town = "") => {
+const onProfile = (dispatch) => async (search, type = "", town = "", page='', pageLength="") => {
   // console.log("hiiiiiiiiiii");
   // let token = await AsyncStorage.getItem("token");
   const { access_token: token } = await getCredentials()
@@ -265,7 +338,7 @@ const onProfile = (dispatch) => async (search, type = "", town = "") => {
   try {
     // console.log("skdfjksdjfsdjfkds");
     const response = await fetch(
-      `https://be-vip-service-slxus.ondigitalocean.app/api/external/affiliates?town=${town}&type=${type}&search=${search}`,
+      `https://service.manage.be-vip.com/api/external/affiliates?town=${town}&type=${type}&search=${search}&page=${page}&length=${pageLength}`,
       {
         method: "GET",
         headers: {
@@ -279,7 +352,7 @@ const onProfile = (dispatch) => async (search, type = "", town = "") => {
 
     // console.log('alkjdfklasdjf??????????')
     const currents = data.data;
-
+console.log("current user ",currents)
     dispatch({ type: "ONPROFILE", payload: currents });
     // console.log(data);
   } catch (err) {
@@ -301,7 +374,7 @@ const onToggleSaveAffiliate = (dispatch) => async (id) => {
   try {
     // console.log("skdfjksdjfsdjfkds");
     const response = await fetch(
-      `https://be-vip-service-slxus.ondigitalocean.app/api/external/affiliates/${id}/toggle`,
+      `https://service.manage.be-vip.com/api/external/affiliates/${id}/toggle`,
       {
         method: "POST",
         headers: {
@@ -321,7 +394,7 @@ const onToggleSaveAffiliate = (dispatch) => async (id) => {
   }
 };
 
-const onAffiliate = (dispatch) => async (search = "") => {
+const onAffiliate = (dispatch) => async (search = "",page='',length='',screen="",affiliate="club",) => {
   // console.log("hiiiiiiiiiii");
   //  try {
   //    console.log('jjjjjjjjjjjj')
@@ -345,7 +418,7 @@ const onAffiliate = (dispatch) => async (search = "") => {
   try {
     // console.log("skdfjksdjfsdjfkds");
     const response = await fetch(
-      `https://be-vip-service-slxus.ondigitalocean.app/api/external/towns?search=${search}`,
+      `https://service.manage.be-vip.com/api/external/towns?search=${search}&page=${""}&length=${1000}&affiliateType=${affiliate}&eventType${""}&affiliateCountry=${"United Kingdom"}&eventCountry${""}`,
       {
         method: "GET",
         headers: {
@@ -360,7 +433,70 @@ const onAffiliate = (dispatch) => async (search = "") => {
     // console.log('alkjdfklasdjf??????????')
     const currents = data.data;
 
+    if(screen === "clubs"){
     dispatch({ type: "onAffiliate", payload: currents });
+
+    }else{
+    dispatch({ type: "onEventAffiliate", payload: currents });
+
+    }
+
+
+
+
+    // console.log(data);
+  } catch (err) {
+    console.log("hello", err);
+  }
+};
+
+const onAffiliates = (dispatch) => async (search = "",affiliate="club",) => {
+  // console.log("hiiiiiiiiiii");
+  //  try {
+  //    console.log('jjjjjjjjjjjj')
+  //    // setting up multiget
+  //    // userToken = await AsyncStorage.multiGet(['userToken', 'userRef']);
+  //    userToken = await AsyncStorage.getItem("token");
+  //    console.log("mytoken???????????",userToken)
+  //    return userToken;
+
+  //  } catch (e) {
+  //    console.log(kkkkkkkkkkk)
+  //    console.log(e)
+  //    // Restoring token failed
+  //  }
+  // let token = await AsyncStorage.getItem("token");
+  const { access_token: token } = await getCredentials()
+
+  // console.log(".....................,mm,m", token);
+
+
+  try {
+    // console.log("skdfjksdjfsdjfkds");
+    const response = await fetch(
+      `https://service.manage.be-vip.com/api/external/towns?search=${search}&page=${""}&length=${1000}&affiliateType=${affiliate}&eventType${""}&affiliateCountry=${"Europe"}&eventCountry${""}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer" + token,
+        },
+      }
+    );
+    const data = await response.json();
+
+    // console.log('alkjdfklasdjf??????????')
+    const currents= data.data;
+console.log("hello>>>>>>>>>>>>>>>>>>",currents)
+
+    dispatch({ type: "onIbiza", payload: currents});
+
+   
+
+
+
+
     // console.log(data);
   } catch (err) {
     console.log("hello", err);
@@ -377,7 +513,7 @@ const onEventByTowns = (dispatch) => async (town = "") => {
   try {
     console.log("skdfjksdjfsdjfkds");
     const response = await fetch(
-      `https://be-vip-service-slxus.ondigitalocean.app/api/external/events?town=${town}`,
+      `https://service.manage.be-vip.com/api/external/events?town=${town}&type=${"Affiliate Event"}&length=${1000}`,
       {
         method: "GET",
         headers: {
@@ -398,10 +534,41 @@ const onEventByTowns = (dispatch) => async (town = "") => {
     console.log("hello", err);
   }
 };
-
 const clearEventsByTowns = (dispatch) => async () => {
   dispatch({ type: "clearEventsByTowns", payload: null })
 }
+// const onEventByType = (dispatch) => async (page= "",length = "",from = "",to = "", types,affiliate = "",eventtype,search = "") => {
+//   // let token = await AsyncStorage.getItem("token");
+//   const { access_token: token } = await getCredentials()
+
+//   // console.log(".....................,mm,m", token);
+
+
+//   try {
+//     console.log("skdfjksdjfsdjfkds");
+//     const response = await fetch(
+//       `https://be-vip-service-slxus.ondigitalocean.app/api/external/events?page=${page}&pagelength=${length}&from=${from}&to=${to}&town=${types}&affiliate=${affiliate}&type=${eventtype}&search=${search}`,
+//       {
+//         method: "GET",
+//         headers: {
+//           Accept: "application/json",
+//           "Content-Type": "application/json",
+//           Authorization: "Bearer" + token,
+//         },
+//       }
+//     );
+//     const data = await response.json();
+
+//     // console.log('alkjdfklasdjf??????????')
+//     const currentsss = data.data;
+// console.log("hello ia am new event",currentsss)
+//     dispatch({ type: "onEventByType", payload: currentsss });
+//     // console.log(data);
+//   } catch (err) {
+//     console.log("hello", err);
+//   }
+// };
+
 
 const onClub = (dispatch) => async (city) => {
   // console.log("hiiiiiiiiiii",city);
@@ -431,7 +598,7 @@ const onClub = (dispatch) => async (city) => {
   try {
     // console.log("skdfjksdjfsdjfkds");
     const response = await fetch(
-      `https://be-vip-service-slxus.ondigitalocean.app/api/external/affiliates/${call}`,
+      `https://service.manage.be-vip.com/api/external/affiliates/${call}`,
       {
         method: "GET",
         headers: {
@@ -472,7 +639,7 @@ const onClubs = (dispatch) => async (citys) => {
   try {
     // console.log("skdfjksdjfsdjfkds");
     const response = await fetch(
-      `https://be-vip-service-slxus.ondigitalocean.app/api/external/affiliates?town=${citys}`,
+      `https://service.manage.be-vip.com/api/external/affiliates?town=${citys}`,
       {
         method: "GET",
         headers: {
@@ -506,7 +673,7 @@ const onEvents = (dispatch) => async (city) => {
   try {
     // console.log("skdfjksdjfsdjfkds");
     const response = await fetch(
-      "https://be-vip-service-slxus.ondigitalocean.app/api/external/events",
+      "https://service.manage.be-vip.com/api/external/events",
       {
         method: "GET",
         headers: {
@@ -530,7 +697,7 @@ const onEvents = (dispatch) => async (city) => {
 
 
 
-const onCompetitions = (dispatch) => async (city) => {
+const onCompetitions = (dispatch) => async (search,page = " ",length = " ") => {
   // console.log("hiiiiiiiiiii");
   // let token = await AsyncStorage.getItem("token");
   // const {access_token: token} = await getCredentials()
@@ -543,7 +710,7 @@ const onCompetitions = (dispatch) => async (city) => {
 
     // console.log("skdfjksdjfsdjfkds");
     const response = await fetch(
-      "https://be-vip-service-slxus.ondigitalocean.app/api/external/competitions",
+      `https://service.manage.be-vip.com/api/external/competitions?page=${page}&pagelength=${1000}&search=${search}`,
       {
         method: "GET",
         headers: {
@@ -597,6 +764,54 @@ const Logout = (dispatch) => async () => {
   }
 
 };
+const Logoutfordel = (dispatch) => async () => {
+  // console.log("inside logout action >>>>>>>>>>>>>>>>>>>>>>>>>>")
+  //  await AsyncStorage.removeItem("token");
+  try {
+    const body = JSON.stringify({});
+    const {access_token: token} = await getCredentials()
+
+    const config = { headers: { "Content-Type": "application/json", "Content-Type": "application/json", Authorization: "Bearer" + token,} };
+
+    console.log("Before request")
+    // const response_del = await Vip.delete("/api/external/auth/me", body, config);
+
+    // const response = await Vip.post("/api/external/auth/logout", body, config);
+
+
+
+    const response_for_del = await fetch(
+      "https://service.manage.be-vip.com/api/external/auth/me",
+      {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer" + token,
+        },
+      }
+    );
+    console.log("After request")
+
+    console.log("Before remvoing")
+    await AsyncStorage.removeItem("keys");
+    console.log("After removing")
+    //  console.log("my token>>>>>>>>>0", response.data.access_token);
+    //  const access = await response.data.access_token;
+    dispatch({ type: "LOGOUT" });
+
+    //  dispatch({ type: "RESTORE_TOKEN", payload: access });
+    // navigation.navigate("Profile");
+  } catch (err) {
+    console.log("bugs>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> logout", err.message);
+    // alert("Invalid Credentials");
+    dispatch({
+      type: "ERROR",
+      payload: "Invalid Credentials",
+    });
+  }
+
+};
 const onForgot =
   (dispatch) =>
     async ({ email, }) => {
@@ -629,7 +844,7 @@ const onReset =
       const config = { headers: { "Content-Type": "application/json" } };
       try {
         const response = await Vip.post(
-          "https://be-vip-service-slxus.ondigitalocean.app/api/external/auth/forgot-password",
+          "https://service.manage.be-vip.com/api/external/auth/forgot-password",
           body,
           config
         );
@@ -666,7 +881,7 @@ const onCheckInAffiliate = (dispatch) => async (id) => {
   try {
     // console.log("skdfjksdjfsdjfkds");
     const response = await fetch(
-      `https://be-vip-service-slxus.ondigitalocean.app/api/external/affiliates/${id}/check-in`,
+      `https://service.manage.be-vip.com/api/external/affiliates/${id}/check-in`,
       {
         method: "POST",
         headers: {
@@ -716,7 +931,8 @@ const LoadToken = (dispatch) => async (tempPayload = null) => {
 }
 const onEventsByClubs =
   (dispatch) =>
-    async (Club = "") => {
+    async (Club = "",) => {
+      console.log("hello action id",Club)
       // let token = await AsyncStorage.getItem("token");
       const { access_token: token } = await getCredentials()
 
@@ -729,7 +945,7 @@ const onEventsByClubs =
       try {
         //  console.log("skdfjksdjfsdjfkds");
         const response = await fetch(
-          `https://be-vip-service-slxus.ondigitalocean.app/api/external/events?affiliate=${Club}`,
+          `https://service.manage.be-vip.com/api/external/events?affiliate=${Club}&type=${"Affiliate Event"}&length=${1000}`,
           {
             method: "GET",
             headers: {
@@ -767,7 +983,7 @@ const onFavProfile =
       try {
         // console.log("skdfjksdjfsdjfkds");
         const response = await fetch(
-          `https://be-vip-service-slxus.ondigitalocean.app/api/external/affiliates?saved=${true}&type=${type}&search=${search}`,
+          `https://service.manage.be-vip.com/api/external/affiliates?saved=${true}&type=${type}&search=${search}`,
           {
             method: "GET",
             headers: {
@@ -822,7 +1038,7 @@ const onTest =
     try {
       // console.log("skdfjksdjfsdjfkds");
       const response = await fetch(
-        `https://be-vip-service-slxus.ondigitalocean.app/api/external/affiliates?town=${town}`,
+        `https://service.manage.be-vip.com/api/external/affiliates?town=${town}&type=${"club"}`,
         {
           method: "GET",
           headers: {
@@ -843,7 +1059,183 @@ const onTest =
       console.log("hello", err);
     }
   };
+  const onSignUP=
 
+  (dispatch) =>
+
+    async (formdata) => {
+      
+      const body = {
+        first_name: formdata.fullName,
+        last_name:formdata.lastName,
+        email:formdata.email,
+        phone:formdata.phone,
+        location:formdata.location,
+        date_of_birth: formdata.dateOfBirth,
+        facebook:"",
+        twitter:"",
+        instagram:"",
+        password:formdata.password,
+        account_url:"https://be-vip.com/subscription/#/login"
+      }
+      const config = { headers: { "Content-Type": "application/json" } };
+      try {
+        
+        const response = await axios.post("https://service.manage.be-vip.com/api/external/auth/register",body,config)
+
+        console.log("After success", response)
+   
+        setCredentials({ access_token: response.data.access_token, refresh_token: response.data.refresh_token })
+   
+    
+        const access = await response.data.access_token
+        dispatch({ type: "LOGIN", payload: response.data });
+
+    
+      } catch (err) {
+        console.log('bugs>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>signUp', err)
+        alert("Invalid Credentials");
+        dispatch({
+          type: "ERROR",
+          payload: "Invalid Credentials",
+        });
+      }
+    }
+    const onVerify = (dispatch) => async () => {
+   
+      const { access_token: token } = await getCredentials()
+      console.log("Verifying token: ", token)
+    
+  
+    
+      try {
+      
+        const response = await fetch(
+          "https://service.manage.be-vip.com/api/external/auth/me",
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: "Bearer" + token,
+            },
+          }
+        );
+        const data = await response.json();
+        const verifydata = data;
+        dispatch({ type: "VERIFY", payload: verifydata});
+        // console.log(data);
+      } catch (err) {
+        console.log("hello", err);
+        // alert(`actions failed: ${err || err.message}`)
+      }
+    };
+    
+const onEventTown = (dispatch) => async (town = "",page= "",search = " ") => {
+ 
+
+  const { access_token: token } = await getCredentials()
+
+  // console.log(".....................,mm,m", token);
+
+
+  try {
+    // console.log("skdfjksdjfsdjfkds");
+    const response = await fetch(
+      `https://service.manage.be-vip.com/api/external/affiliates?town=${town}&type=${"Restaurant"}&search=${search}&page=${page}&length=${1000}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer" + token,
+        },
+      }
+    );
+    const data = await response.json();
+
+    // console.log('alkjdfklasdjf??????????')
+    const c = data.data;
+
+   console.log("currents affairs",c)
+   
+
+   
+    dispatch({ type:"onEventCity", payload: c });
+
+   } catch (err) {
+    console.log("hello", err);
+  }
+};
+const onMultiple = (dispatch) => async (page="",length="",search = "",type = "bar",types ) => {
+  // console.log("hiiiiiiiiiii");
+  // let token = await AsyncStorage.getItem("token");
+  // const {access_token: token} = await getCredentials()
+
+  // console.log(".....................,mm,m", token);
+
+
+  try {
+    const { access_token: token } = await getCredentials()
+
+    // console.log("skdfjksdjfsdjfkds");
+    const response = await fetch(
+      `https://service.manage.be-vip.com/api/external/towns?page=${page}&length=${1000}&search=${search}&affiliateType=${"Restaurant"}&eventType=${""}&affiliateCountry=${"United Kingdom"}&eventCountry${""}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer" + token,
+        },
+      }
+    );
+    const data = await response.json();
+
+    // console.log('alkjdfklasdjf??????????')
+    const cu = data.data;
+// console.log("multiple data ",currents)
+    dispatch({ type: "ONMULTIPLE", payload: cu });
+    // console.log(data);
+  } catch (err) {
+    console.log("hello MUltiple", err);
+  }
+};
+const OnEUROPE = (dispatch) => async (page="",length="",search = "",type = "Restaurant",types ) => {
+  // console.log("hiiiiiiiiiii");
+  // let token = await AsyncStorage.getItem("token");
+  // const {access_token: token} = await getCredentials()
+
+  // console.log(".....................,mm,m", token);
+
+
+  try {
+    const { access_token: token } = await getCredentials()
+
+    // console.log("skdfjksdjfsdjfkds");
+    const response = await fetch(
+      `https://service.manage.be-vip.com/api/external/towns?page=${page}&length=${1000}&search=${search}&affiliateType=${"Restaurant"}&eventType=${""}&affiliateCountry=${"Europe"}&eventCountry${""}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer" + token,
+        },
+      }
+    );
+    const data = await response.json();
+
+    // console.log('alkjdfklasdjf??????????')
+    const awaiz = data.data;
+    console.log("hello this is work",awaiz)
+// console.log("multiple data ",currents)
+    dispatch({ type: "ONEUROPE", payload: awaiz});
+    // console.log(data);
+  } catch (err) {
+    console.log("hello MUltiple", err);
+  }
+};
 export const { Provider, Context } = DataContext(
   AuthReducer,
   {
@@ -875,6 +1267,15 @@ export const { Provider, Context } = DataContext(
     onFavProfile,
     clearFavProfile,
     onTest,
-  },
+    onSignUP,
+    Logoutfordel,
+    onVerify,
+    onEventTown,
+    onMultiple, 
+    verifyButton,
+    onAffiliates,
+    OnEUROPE,
+   
+    },
   { token: null, msg: null }
 );

@@ -1,10 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
-import MapView, { Callout, PROVIDER_GOOGLE } from "react-native-maps";
-import Marker from "react-native-maps";
+import MapView, { Callout, PROVIDER_GOOGLE, } from "react-native-maps";
+import MapViewDirections from "react-native-maps";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+ 
 import {
   StyleSheet,
   Dimensions,
@@ -53,8 +54,31 @@ const Map = ({ itemLong, itemLat, itemName, itemDesc }) => {
   //   }
   // },[state?.club])
 
-  const getLocation = async () => {
-    try {
+  // const getLocation = async () => {
+  //   try {
+  //     let { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== "granted") {
+  //       setErrorMsg("Permission to access location was denied");
+  //       return;
+  //     }
+
+  //     let location = await Location.getCurrentPositionAsync({});
+  //     setLocation(location);
+  //     text = location;
+  //     // console.log(
+  //     //   "Location==========================================>>>>>>>>>>",
+  //     //   typeof text
+  //     // );
+  //     // console.log("Longitude: ", text.coords.longitude);
+  //     // console.log("Latitude: ", text.coords.latitude);
+  //     setUserLatitude(text.coords.latitude);
+  //     setUserLongitude(text.coords.longitude);
+  //   } catch (error) {
+  //     Alert("Location Error", error);
+  //   }
+  // };
+  useEffect(() => {
+    (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
@@ -62,43 +86,40 @@ const Map = ({ itemLong, itemLat, itemName, itemDesc }) => {
       }
 
       let location = await Location.getCurrentPositionAsync({});
+      console.log("Showing location object: ", location);
       setLocation(location);
-      text = location;
-      // console.log(
-      //   "Location==========================================>>>>>>>>>>",
-      //   typeof text
-      // );
-      // console.log("Longitude: ", text.coords.longitude);
-      // console.log("Latitude: ", text.coords.latitude);
-      setUserLatitude(text.coords.latitude);
-      setUserLongitude(text.coords.longitude);
-    } catch (error) {
-      Alert("Location Error", error);
+    })();
+  }, []);
+  const [a, setA] = useState("");
+  const [c, setC] = useState("");
+  useEffect(() => {
+    if (location && location.coords) {
+      setA(location?.coords?.latitude);
+      setC(location?.coords?.longitude);
     }
-  };
-
+  }, [location]);
   // useEffect(() => {
   //   setG(state?.club)
   // },[state?.club])
 
-  useEffect(() => {
-    // (async () => {
-    //   let { status } = await Location.requestForegroundPermissionsAsync();
-    //   if (status !== 'granted') {
-    //     setErrorMsg('Permission to access location was denied');
-    //     return;
-    //   }
+  // useEffect(() => {
+  //   // (async () => {
+  //   //   let { status } = await Location.requestForegroundPermissionsAsync();
+  //   //   if (status !== 'granted') {
+  //   //     setErrorMsg('Permission to access location was denied');
+  //   //     return;
+  //   //   }
 
-    //   let location = await Location.getCurrentPositionAsync({});
-    //   setLocation(location);
-    // })();
-    getLocation();
-    // console.log(
-    //   "inside get directions >>>>>>>>>>>>>>>>>>"
-    // )
-  }, []);
+  //   //   let location = await Location.getCurrentPositionAsync({});
+  //   //   setLocation(location);
+  //   // })();
+  //   getLocation();
+  //   // console.log(
+  //   //   "inside get directions >>>>>>>>>>>>>>>>>>"
+  //   // )
+  // }, []);
 
-  let text = "Waiting..";
+  // let text = "Waiting..";
 
   // useEffect(() => {
   //   if (errorMsg) {
@@ -122,18 +143,17 @@ const Map = ({ itemLong, itemLat, itemName, itemDesc }) => {
   // }, [errorMsg, errorMsg]);
 
   // console.log("User >>> ", userLatitude, userLongitude);
-
+console.log("hello location",a,c)
   const handleGetDirections = () => {
+   
     const data = {
       source: {
-        // latitude: -33.8356372,
-        // longitude: 18.6947617
-        latitude: userLatitude,
-        longitude: userLongitude,
+        latitude: a,
+        longitude: c
       },
       destination: {
-        latitude: latitude,
-        longitude: longitude,
+        latitude: itemLat,
+        longitude: itemLong
       },
       params: [
         {
@@ -145,34 +165,35 @@ const Map = ({ itemLong, itemLat, itemName, itemDesc }) => {
           value: "navigate", // this instantly initializes navigation using the given travel mode
         },
       ],
-      waypoints: [
-        {
-          latitude: userLatitude,
-          longitude: userLongitude,
-        },
-        {
-          latitude: latitude,
-          longitude: longitude,
-        },
 
-        // {
-        //   latitude: -33.8600025,
-        //   longitude: 18.697452
-        // },
-        // {
-        //   latitude: -33.8600026,
-        //   longitude: 18.697453
-        // },
-        //    {
-        //   latitude: -33.8600036,
-        //   longitude: 18.697493
-        // }
-      ],
+      // waypoints: [
+      //   // {
+      //   //   latitude: userLatitude,
+      //   //   longitude: userLongitude,
+      //   // },
+      //   // {
+      //   //   latitude: itemLat,
+      //   //   longitude: itemLong,
+      //   // },
+
+      //   {
+      //     latitude: -33.8600025,
+      //     longitude: 18.697452
+      //   },
+      //   {
+      //     latitude: -33.8600026,
+      //     longitude: 18.697453
+      //   },
+      //      {
+      //     latitude: -33.8600036,
+      //     longitude: 18.697493
+      //   }
+      // ],
     };
 
     getDirections(data);
   };
-
+  
   return (
     <View style={{ flex: 1 }}>
       {/* <View>
@@ -199,6 +220,7 @@ const Map = ({ itemLong, itemLat, itemName, itemDesc }) => {
           title={itemName}
           description={itemDesc}
         />
+      
       </MapView>
 
       <View

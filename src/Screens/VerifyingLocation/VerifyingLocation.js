@@ -7,9 +7,19 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
-  Animated,
-  Easing,
+  Dimensions,
+ 
 } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  interpolate,
+  withTiming,
+  Easing,
+  Extrapolate,
+  withRepeat,
+} from "react-native-reanimated";
+import * as geolib from "geolib";
 import {
   useNavigation,
   CommonActions,
@@ -20,6 +30,7 @@ import React, { useState, useContext, useRef, useEffect } from "react";
 import MapView from "../AccessMap/MapView";
 
 import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
+import { Context as Actions } from "../../Context/Actions";
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
@@ -28,10 +39,45 @@ import AppLoading from "expo-app-loading";
 import { NavigationContainer } from "@react-navigation/native";
 // import { ScrollView } from "native-base";
 
-const VerifyingLocation = ({ navigation, route }) => {
-  const { latitude, longitude } = route.params;
+const Pulse = ({ repeat }) => {
+  const animation = useSharedValue(0);
 
-  console.log("latitude??????????", latitude);
+  // We repeatedly doing shared value from 0 to 1
+  useEffect(() => {
+    animation.value = withRepeat(
+      withTiming(1, {
+        duration: 2000,
+        easing: Easing.linear,
+      }),
+      -1,
+      false
+    );
+  }, []);
+  const animatedStyles = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      animation.value,
+      [0, 1],
+      [0.6, 0],
+      Extrapolate.CLAMP
+    );
+    return {
+      opacity: opacity,
+      transform: [{ scale: animation.value }],
+    };
+  });
+  return <Animated.View style={[styles.circle, animatedStyles]} />;
+};
+const VerifyingLocation = ({ navigation, route }) => {
+  const { state, onAffiliate, clearOnProfile,onCheckInAffiliate  } = useContext(Actions);
+
+  const { userlatitude, userlongitude, affiliateLatitude, affiliateLongitude, affiliateId,clubname } = route.params;
+const[verify,setVerify]=useState(false)
+ 
+
+
+// console.log("hello how are you", affiliateLatitude, affiliateLongitude,affiliateId)
+
+  // console.log("latitude??????????", latitude);
 
   const animationProgress = useRef(new Animated.Value(0));
 
@@ -44,12 +90,32 @@ const VerifyingLocation = ({ navigation, route }) => {
     }).start();
   }, []);
 
-  useEffect(() => {
-    setTimeout(() => {
-      navigation.replace("Uni");
-    }, 8000);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     navigation.replace("Uni");
+  //   }, 5000);
+  // }, []);
+  useEffect(()=>{
 
+    const temp =   geolib.isPointWithinRadius(
+      { latitude: affiliateLatitude, longitude: affiliateLongitude },
+      { latitude: userlatitude, longitude: userlongitude},
+      50
+    )
+  
+  console.log("show atempt veriable",temp)
+    if(temp){
+      onCheckInAffiliate(affiliateId);
+      setTimeout(() => {
+        navigation.replace("Uni",{clubname:clubname});
+      }, 4000);
+    }
+    else{
+      setTimeout(()=>{navigation.navigate("Ver",{clubname:clubname})},4000)
+     
+    }
+  
+  },[userlatitude, userlongitude, affiliateLatitude, affiliateLongitude ])
   //   const onPressQueueJump = () => {
   //     try {
   //       onCheckInAffiliate(itemId);
@@ -77,22 +143,26 @@ const VerifyingLocation = ({ navigation, route }) => {
         backgroundColor="#080402"
         barStyle="light-content"
       />
-      <View>
+      
+       <View style={{height:'25%',justifyContent:'flex-end'}}>
+        <View style={{}}>
         <Text
           style={{
             color: "#B79D71",
             fontSize: 24,
             fontFamily: "OpenSans-SemiBold",
             alignSelf: "center",
-            marginTop: 39,
+            // marginTop: 39,
             fontWeight: "600",
             // margin:30
-            marginBottom: 20,
+            // marginBottom: 20,
           }}
         >
           {" "}
           Verifying Location
         </Text>
+        </View>
+        <View style={{}}>
         <Text
           style={{
             color: "#B79D71",
@@ -107,7 +177,9 @@ const VerifyingLocation = ({ navigation, route }) => {
           {" "}
           Please Wait!
         </Text>
-      </View>
+        </View>
+        </View>
+
 
       {/* <View style={{ marginTop: 16, alignItems: "center" }}>
               <Text
@@ -154,13 +226,13 @@ const VerifyingLocation = ({ navigation, route }) => {
               </TouchableOpacity>
             </View> */}
 
-      <View style={{ flex: 1, justifyContent: "center" }}>
+      <View style={{flex:1, justifyContent:'center',alignItems:'center',marginBottom:30}}>
         {/* <Lottie
       source={require('../../../assets/animation_lb1wwt8u.json')}
       progress={animationProgress.current}
 /> */}
-        <MapView latitude={latitude} longitude={longitude}></MapView>
-
+        <MapView latitude={userlatitude} longitude={userlongitude}></MapView>
+        <Pulse/>
         {/* <Image
               source={require("../../../assets/Image/ver.png")}
               style={{
@@ -183,7 +255,9 @@ const VerifyingLocation = ({ navigation, route }) => {
                   marginTop:15
                  
                   }}>ACCESS GRANTED</Text>
-                  </View> */}
+      
+              </View> */}
+               
     </View>
   );
 };
@@ -195,9 +269,16 @@ const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor: "yellow",
     backgroundColor: "#000000",
+alignItems:'center',
+// justifyContent:'center'
+justifyContent:'space-between',
+// paddingTop:120,
+// paddingBottom:120
 
-    height: "100%",
-    // justifyContent:"space-around"
+    // height: Dimensions.get("window").height,
+    // flexDirection:"column",
+    // justifyContent:"space-evenly"
+    // justifyContent:"center"
   },
   input: {
     margin: 15,
@@ -225,5 +306,17 @@ const styles = StyleSheet.create({
   exit: {
     alignSelf: "center",
     marginTop: 15,
+  },
+  circle: {
+    width: "100%",
+    borderRadius: 300,
+    height: 400,
+    position: "absolute",
+    borderColor: "#927E5A",
+    borderWidth: 4,
+    backgroundColor: "#927E5A",
+    // justifyContent:'center',
+    alignItems:'center',
+   
   },
 });

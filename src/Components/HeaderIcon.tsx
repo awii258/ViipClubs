@@ -16,13 +16,13 @@ const HeaderIcon = ({ RIGHT }) => {
       // style={{height:50, justifyContent:"flex-start", backgroundColor:"yellow",}}
       style={styles.container}
     >
-    
+    <TouchableOpacity onPress={()=>navigation.navigate("Home")}>
       <Image
         resizeMode="contain"
         style={{ height: 37, width: 37, right: RIGHT }}
         source={require("../../assets/Image/topIcon.png")}
       />
-     
+     </TouchableOpacity>
     </View>
   );
 };

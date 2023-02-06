@@ -12,7 +12,7 @@ const Product = route.params.productTitle;
   return (
     <Tab.Navigator
       screenOptions={{
-
+        
         tabBarStyle: {
           backgroundColor: "#000000",
           borderTopWidth: 1,

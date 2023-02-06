@@ -26,7 +26,18 @@ import {
   clearOnProfileType,
   onFavProfileType,
   clearFavProfileType,
-  ONTEST
+  ONTEST,
+  DELACCOUNT,
+  REGISTER,
+  VERIFY,
+  onEventAffiliate,
+  onEventCity ,
+  ONMULTIPLE,
+  onEventByType,
+  VERIFYS,
+  onIbiza,
+  ONEUROPE,
+  REFRESH
 } from "./Types";
 import * as SecureStore from "expo-secure-store";
 // import AsyncStorage from '@react-native-community/async-storage'
@@ -43,12 +54,29 @@ const AuthReducer = (state, action) => {
 
         token: payload,
       };
+      // case REFRESH:
+      //   return {
+      //     ...state,
+  
+      //     token: payload,
+      //   };
+      case REGISTER:
+        return {
+          ...state,
+  
+          reg: payload,
+        };
     case FORPASSWORD:
       return {
         ...state,
 
         token: payload,
       };
+     case  VERIFYS:
+      return {
+        ...state,
+        verify:payload
+      }
     case RESET:
       return {
         ...state,
@@ -62,6 +90,12 @@ const AuthReducer = (state, action) => {
 
         user: payload,
       };
+      case  DELACCOUNT:
+        return {
+          ...state,
+  
+          del: payload,
+        };
     case PRO:
       return {
         ...state,
@@ -127,6 +161,7 @@ const AuthReducer = (state, action) => {
 
         token: null,
       };
+     
 
     case ERROR:
       return {
@@ -163,6 +198,17 @@ const AuthReducer = (state, action) => {
         ...state,
         towns: payload,
       };
+      case onIbiza:
+      return {
+        ...state,
+        ibiza: payload,
+      };
+    case onEventAffiliate:
+      return {
+        ...state,
+        eventTowns: payload,
+      };
+     
     case onToggleSaveAffiliate:
       return {
         ...state,
@@ -172,6 +218,11 @@ const AuthReducer = (state, action) => {
       return {
         ...state,
         eventTown: payload,
+      };
+      case onEventByType:
+      return {
+        ...state,
+        eventType: payload,
       };
     case clearEventsType:
       return {
@@ -195,6 +246,29 @@ const AuthReducer = (state, action) => {
 
         loadtoken: payload,
       };
+     
+      case VERIFY:
+      return {
+        ...state,
+
+        verify: payload,
+      };
+      case  onEventCity:
+        return {
+          ...state,
+          cityEvents: payload,
+        };
+        case  ONMULTIPLE:
+          return {
+            ...state,
+            multiple: payload,
+          };
+          case  ONEUROPE:
+            return {
+              ...state,
+              europe: payload,
+            };
+        
     default:
       return state;
   }

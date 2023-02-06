@@ -11,6 +11,7 @@ import {
   Share,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
+import HeaderIcon from "../Components/HeaderIcon";
 import { Ionicons } from "@expo/vector-icons";
 import { Context as Actions } from "../Context/Actions";
 import { Foundation } from "@expo/vector-icons";
@@ -30,9 +31,10 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { AffiliateService } from "../api/AffiliateService";
+
 import { SliderBox } from "react-native-image-slider-box";
 import ClubsPromotionProfile from "../Components/ClubsPromotionProfile";
+import BarProfile from "./BarsProfile/BarProfile";
 
 import Constants from "expo-constants";
 // import Share from "react-native-share";
@@ -63,8 +65,12 @@ const ClubsProfile = ({ route }) => {
     itemAddress2,
     itemlong,
     itemlat,
+    itemDate,
+    itemTime,
+    barname,
+   
   } = route.params;
-  console.log("item description clubprofile: ", itemDescription);
+  console.log("item description clubprofile:4 ", barname);
   const {
     state,
     onProfile,
@@ -74,6 +80,7 @@ const ClubsProfile = ({ route }) => {
     onCheckInAffiliate,
     onEventsByClubs,
     clearFavProfile,
+    verifyButton,
   } = useContext(Actions);
 
   const onShare = async () => {
@@ -117,8 +124,8 @@ const ClubsProfile = ({ route }) => {
 
   const [g, setG] = useState("");
 
-  const [book, setBook] = useState(true);
-  const [contact, setContact] = useState(false);
+  const [book, setBook] = useState(false);
+  const [contact, setContact] = useState(true);
   const [promotion, setPromotion] = useState(false);
   const [favorite, setFavorite] = useState(false);
 
@@ -232,7 +239,8 @@ const ClubsProfile = ({ route }) => {
   const onPressQueueJump = () => {
     try {
       onCheckInAffiliate(itemId);
-      navigation.navigate("Qr", { id: itemId });
+      navigation.navigate("Qr", { id: itemId,  clubname: "club", });
+      verifyButton (false);
     } catch (error) {
       navigation.navigate("Main");
     }
@@ -267,7 +275,7 @@ const ClubsProfile = ({ route }) => {
          
         </View> */}
 
-        <View style={{ width: 414, height: 320 }}>
+        <View style={{ width: 414, height: 320,}}>
           <SliderBox
             images={itemImages}
             sliderBoxHeight={400}
@@ -307,10 +315,13 @@ const ClubsProfile = ({ route }) => {
               <AntDesign name="left" size={24} color="#927E5A" />
             </TouchableOpacity>
             <View>
-              <Text style={styles.textStyle1}>{itemname}</Text>
+              <Text style={styles.textStyle1}>{  itemname.length > 15
+                ? itemname.substring(0, 13) + "..."
+                : itemname}</Text>
+            
             </View>
-
-            <TouchableOpacity
+<HeaderIcon RIGHT={10}/>
+            {/* <TouchableOpacity
               onPress={() =>
                 navigation.navigate("Map", {
                   itemLongitude: itemlong,
@@ -321,15 +332,18 @@ const ClubsProfile = ({ route }) => {
               }
             >
               <Ionicons name="ios-location-sharp" size={28} color="#927E5A" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
-        {click ? (
+        {/* {click ? (
           <TouchableOpacity
             onPress={() => favButton(itemId)}
             style={{ marginTop: hp("-5%"), alignItems: "flex-end", margin: 15 }}
           >
-            <AntDesign name="heart" size={24} color="#927E5A" />
+            <AntDesign name="heart" size={24} color="#927E5A" style={{shadowOpacity:15,shadowColor:"#927E5A",shadowRadius:10, shadowOffset: {
+            width: 0,    
+            height: 1,
+          }, }} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -338,7 +352,7 @@ const ClubsProfile = ({ route }) => {
           >
             <AntDesign name="hearto" size={24} color="#FFFFFF" />
           </TouchableOpacity>
-        )}
+        )} */}
 
         <View
           style={{
@@ -347,16 +361,7 @@ const ClubsProfile = ({ route }) => {
             marginTop: 18,
           }}
         >
-          <TouchableOpacity
-            style={book ? styles.buttonDesign : styles.buttonDesign1}
-            onPress={() => {
-              a("book");
-            }}
-          >
-            <Text style={book ? styles.text1 : styles.text}>What's On</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
+             <TouchableOpacity
             style={contact ? styles.buttonDesign : styles.buttonDesign1}
             onPress={() => {
               a("contact");
@@ -364,6 +369,17 @@ const ClubsProfile = ({ route }) => {
           >
             <Text style={contact ? styles.text1 : styles.text}>Contact</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={book ? styles.buttonDesign : styles.buttonDesign1}
+            onPress={() => {
+              a("book");
+            }}
+          >
+            {barname?<Text style={book ? styles.text1 : styles.text}>About Us</Text>:<Text style={book ? styles.text1 : styles.text}>What's On</Text>}
+            
+          </TouchableOpacity>
+
+       
           {/* <TouchableOpacity
             style={promotion ? styles.buttonDesign : styles.buttonDesign1}
             onPress={() => {
@@ -390,8 +406,10 @@ const ClubsProfile = ({ route }) => {
         </Text>
       </View> */}
         {book ? (
-          <View style={{ height: 200 }}>
-            <ClubsPromotionProfile HEIGHT={250} clubId={itemId} />
+          
+          <View style={{ height: 450 }}>
+          {barname ?(<BarProfile  bardec={itemDescription}  bartime={itemTime}  />):<ClubsPromotionProfile HEIGHT={250} clubId={itemId}/>}
+          {/* <ClubsPromotionProfile HEIGHT={250} clubId={itemId} /> */}
           </View>
         ) : null}
         {/* {promotion ? (
@@ -575,13 +593,78 @@ const ClubsProfile = ({ route }) => {
                 </Text>
               </TouchableOpacity>
             </View>
-            <View style={styles.outerContainer}>
+            <View style={styles.outerContainer2}>
+              <TouchableOpacity
+                // title="Share"
+                onPress={() =>
+                  navigation.navigate("Map", {
+                    itemLongitude: itemlong,
+                    itemLatitude: itemlat,
+                    itemName: itemname,
+                    itemDescription: itemDescription,
+                  })}
+                style={{
+                  width: 200,
+                  height: 30,
+
+                  backgroundColor: "#927E5A",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  margin: 5,
+                  borderRadius: 5,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: "OpenSansRegular",
+                    textTransform: "uppercase",
+                    color: "#000000",
+                  }}
+                >
+                  Get Directions
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{}}>
+            {click ? (
+          <TouchableOpacity
+            onPress={() => favButton(itemId)}
+            style={[styles.pressableButton]}
+          >
+            <AntDesign name="heart" size={18} color="#927E5A" style={{shadowOpacity:15,shadowColor:"#927E5A",shadowRadius:10, shadowOffset: {
+            width: 0,    
+            height: 1,
+          }, }} />
+           <Text
+                    style={[styles.textStyle6, { color: "#927E5A",left:5 }]}
+                  >
+                    Favourite
+                  </Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => favButton(itemId)}
+            style={[styles.pressableButton]}
+          >
+            <AntDesign name="hearto" size={18} color="#FFFFFF" />
+             <Text
+                    style={[styles.textStyle6, { color: "white",left:5  }]}
+                  >
+                    Favourite
+                  </Text>
+          </TouchableOpacity>
+
+        )}
+               
+              </View>
+            {/* <View style={styles.outerContainer}>
               <TouchableOpacity
                 onPress={() =>
                   Linking.openURL(
                     Platform.OS === "android"
-                      ? "https://play.google.com/store/apps/details?id=com.ubercab&hl=en&gl=US"
-                      : "https://apps.apple.com/us/app/uber-request-a-ride/id368677368"
+                      ? `https://m.uber.com/ul/?action=setPickup&pickup[latitude]=my-location&pickup[longitude]=my-location&dropoff[latitude]=${itemlat}&dropoff[longitude]=${itemlong}`
+                      : `https://m.uber.com/ul/?action=setPickup&pickup[latitude]=my-location&pickup[longitude]=my-location&dropoff[latitude]=${itemlat}&dropoff[longitude]=${itemlong}`
                   )
                 }
                 style={styles.uberContainer}
@@ -592,12 +675,86 @@ const ClubsProfile = ({ route }) => {
                   source={require("../../assets/Image/UberLogo.png")}
                 />
               </TouchableOpacity>
-            </View>
+            </View> */}
           </>
         ) : null}
       </View>
 
-      <View
+{barname?  <View
+        style={{
+          position: "absolute",
+          bottom: 20,
+          flex: 1,
+          alignSelf: "center",
+          // backgroundColor: "#927E5A",
+          // width: "100%",
+        }}
+      >
+        <View style={{ flexDirection: "row", marginBottom: 15 }}>
+          <TouchableOpacity
+            style={{
+              width: 185,
+              height: 50,
+              backgroundColor: "#927E5A",
+
+              justifyContent: "center",
+              alignItems: "center",
+              margin: 5,
+              borderRadius: 5,
+            }}
+            onPress={() =>
+              navigation.navigate("Table", { itemWebsite: itemWebsite })
+            }
+          >
+            <Text
+              style={{
+                fontSize: 20,
+                fontFamily: "OpenSansRegular",
+                textTransform: "uppercase",
+                color: "#ffffff",
+              }}
+            >
+              Book A Table
+            </Text>
+          </TouchableOpacity>
+       
+
+          {/* <View
+            style={{
+              height: "100%",
+              width: 1,
+              backgroundColor: "#000000",
+              alignSelf: "center",
+            }}
+          ></View>
+
+          <TouchableOpacity
+            style={{
+              width: 185,
+              height: 50,
+              backgroundColor: "#927E5A",
+              justifyContent: "center",
+              alignItems: "center",
+              margin: 5,
+              borderRadius: 5,
+            }}
+            onPress={onPressQueueJump}
+          >
+            <Text
+              style={{
+                fontSize: 20,
+
+                // marginRight: 15,
+                color: "#FFFFFF",
+                fontFamily: "OpenSansRegular",
+                textTransform: "uppercase",
+              }}
+            >
+              QUEUE JUMP
+            </Text>
+          </TouchableOpacity> */}
+        </View>
+      </View>:  <View
         style={{
           position: "absolute",
           bottom: 20,
@@ -637,7 +794,7 @@ const ClubsProfile = ({ route }) => {
 
           <View
             style={{
-              height: "100%",
+              height: "50%",
               width: 1,
               backgroundColor: "#000000",
               alignSelf: "center",
@@ -670,7 +827,7 @@ const ClubsProfile = ({ route }) => {
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </View>}    
     </>
   );
 };
@@ -744,6 +901,14 @@ const styles = StyleSheet.create({
     padding: 5,
     fontFamily: "OpenSansRegular",
   },
+  textStyle6: {
+    color: "#927E5A",
+    fontFamily: "OpenSansRegular",
+    fontSize: 14,
+    marginTop: 2.5,
+ 
+    textTransform: "uppercase",
+  },
   imageTextContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -764,11 +929,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   outerContainer1: {
-    marginTop: 1,
+    marginTop:40,
     // backgroundColor: "white",
     // height:"inherit"
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+  },
+  outerContainer2: {
+    marginTop:0,
+    // backgroundColor: "white",
+    // height:"inherit"
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  pressableButton: {
+    // flex:8,
+    marginTop:5,
+    flexDirection: "row",
+    alignSelf: "center",
+    alignItems: "center",
+    // marginBottom:25
+    // marginTop: Platform.OS === "ios" ? hp("3%") : hp("1%"),
+    // marginTop: hp("1.5%"),
   },
 });

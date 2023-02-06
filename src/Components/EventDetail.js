@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native'
-import React,{useContext} from 'react'
+import React,{useContext, useEffect} from 'react'
 import { Context as Actions } from "../Context/Actions";
 
 import { FontAwesome, Feather } from '@expo/vector-icons';
@@ -8,29 +8,34 @@ import moment from 'moment';
 
 const EventDetail = ({ route, navigation }) => {
 
-  const { image, title, content, time, date, website, affiliateId } = route.params;
-  const {state, onCheckInAffiliate} = useContext(Actions)
+  const { image, title, content, time, date, website, affiliateId,barname } = route.params;
+  const {state, onCheckInAffiliate,verifyButton } = useContext(Actions)
   console.log("Showing website in evenDetails:", website)
 
   const Date = moment(date).format("DD MMMM YYYY");
 
   const onPressQueueJump = () => {
     onCheckInAffiliate(affiliateId)
-    navigation.navigate("Qr")
+    navigation.navigate("Qr",{clubname: "club"})
+    verifyButton (false);
 
   }
+// useEffect(()=>{
+
+// },[])
 
   return (
     <View style={styles.container}>
       {/* <Text style={{color:"white"}}>YO</Text> */}
       {/* <ScrollView contentContainerStyle={{paddingBottom:200}}> */}
-      <View>
+      <View >
         <Image
           style={{
             height: 305,
             width: 373,
             alignSelf: "center",
             marginTop: 30,
+            
           }}
           resizeMode="cover"
           source={{ uri: image }}
@@ -78,7 +83,7 @@ const EventDetail = ({ route, navigation }) => {
           </View>
         </View>
       </View>
-      <ScrollView contentContainerStyle={{ paddingBottom: 200 }}>
+      <ScrollView contentContainerStyle={{ paddingBottom:200 }}>
         <View >
           <Text
             selectable={true}
@@ -90,7 +95,43 @@ const EventDetail = ({ route, navigation }) => {
       </ScrollView>
       {/* </ScrollView> */}
 
-      <View
+     {barname?<View
+        style={{
+          flexDirection: "row",
+          position: "absolute",
+          bottom: 30,
+          alignSelf: "center",
+        }}
+      >
+        <TouchableOpacity
+          style={{
+            width: 185,
+            height: 50,
+            backgroundColor: "#927E5A",
+
+            justifyContent: "center",
+            alignItems: "center",
+            margin: 5,
+            borderRadius: 5,
+          }}
+          onPress={() => navigation.navigate("Venue",{itemWebsite: website})}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              color: "#FFFFFF",
+              fontFamily: "OpenSans-Regular",
+              textTransform: "uppercase",
+            }}
+          >
+            Book Event
+          </Text>
+        </TouchableOpacity>
+
+       
+
+       
+      </View>:<View
         style={{
           flexDirection: "row",
           position: "absolute",
@@ -157,7 +198,7 @@ const EventDetail = ({ route, navigation }) => {
             Queue Jump
           </Text>
         </TouchableOpacity>
-      </View>
+      </View>} 
     </View>
   );
 }
@@ -166,7 +207,7 @@ export default EventDetail
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#000000", flex: 1
+    backgroundColor: "#000000", flex: 1,
   },
   textStyle: {
     color: "#927E5A",

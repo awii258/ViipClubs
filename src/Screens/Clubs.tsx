@@ -53,18 +53,42 @@ const Clubs = ({ navigation, route }: AnimalProps) => {
   const [SearchAffiliate, setSearchAffiliate] = useState("");
 
   const [clubBack, setClubBack] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageCount, setPageCount] = useState(25);
+  const [clubs, setClubs] = useState([]);
+  const [filteredClubs, setFilteredClubs] = useState([]);
+  const [totalClubCount, setTotalClubCount] = useState([]);
+
+  // const [temptown,setTempTown]=useState([])
 
   const { state, onProfile, clearClub, clearEventsByTowns, clearEventsByClub } =
     useContext(Actions);
-  // console.log("................>>>>>", state.users);
-  //   setData(state.users)
 
+  // console.log("................>>>>> clubs", state.users);
+  //   setData(state.users)
+  const [firstRender, setFirstRender] = useState(true);
   const SearchAffiliate_ = () => {
     // alert("search", search);
     // const tempSearch=search;
-    onProfile(SearchAffiliate, "Club", productTitle);
+    // onProfile(SearchAffiliate, "Club", productTitle, "","");
+    // setClubs([]);
     // console.log("Search=====================================================search", SearchAffiliate);
   };
+  //   const a = ()=>{
+  //     if(SearchAffiliate){
+  //       onProfile(SearchAffiliate, "Club", productTitle, "","");
+  //       setClubs([]);
+  //     }
+  //     else{
+  //       onProfile("", "Club", productTitle,page,pageCount);
+  //       // setClubs([]);
+  //     }
+  //   }
+  //   useEffect(()=>{
+  // a()
+
+  //   },[])
+  //
   // console.log("Filtered Affiliates ==========================================", state.users);
   //   const get = async () => {
   //     let token = await AsyncStorage.getItem("token");
@@ -98,17 +122,58 @@ const Clubs = ({ navigation, route }: AnimalProps) => {
   );
 
   useEffect(() => {
-    onProfile("", "Club", productTitle);
     clearEventsByTowns();
+    // onProfile("", "Club", productTitle, page, pageCount);
     // console.log("hi");
   }, []);
 
+  // useEffect(() => {
+  //   onProfile("", "Club", productTitle, page, pageCount);
+  // }, [page, pageCount]);
+
   useEffect(() => {
-    if (SearchAffiliate === "") {
-      onProfile("", "Club", productTitle);
+    if (state && state.users) {
+      const tempArr = state.users;
+      tempArr.sort(function (a, b) {
+        var textA = a.name.toUpperCase();
+        var textB = b.name.toUpperCase();
+        return textA < textB ? -1 : textA > textB ? 1 : 0;
+      });
+      setClubs(tempArr);
+      setTotalClubCount(tempArr.length);
+      setFilteredClubs([...tempArr.slice(0, 25)]);
+      setPageCount(25);
+    }
+  }, [state?.users]);
+
+  useEffect(() => {
+    if (clubs.length > 0) {
+      if (SearchAffiliate) {
+        const tempArr = clubs.filter((item) =>
+          item.name.toLowerCase().includes(SearchAffiliate.toLowerCase())
+        );
+        setFilteredClubs(tempArr)
+      }else{
+        setFilteredClubs([...clubs.slice(0, 25)])
+        setPageCount(25)
+      }
     }
   }, [SearchAffiliate]);
-  console.log("hello>>>>>>>>>???????????????????", productTitle);
+
+  useEffect(()=>{
+    setFilteredClubs([...clubs.slice(0, pageCount)])
+  },[pageCount])
+
+  useEffect(() => {
+    onProfile("", "Club", productTitle, "", 1000);
+  }, []);
+
+  // useEffect(() => {
+  //   if (SearchAffiliate === "") {
+  //     onProfile("", "Club", productTitle,page,pageCount);
+  //   }
+  // }, [SearchAffiliate]);
+  // console.log("hello>>>>>>>>>???????????????????", productTitle);
   let c = productId;
   // console.log(">>>??>>>????", productId);
   const b = state.users;
@@ -125,14 +190,16 @@ const Clubs = ({ navigation, route }: AnimalProps) => {
   //   );
 
   // 👆 do this instead of creating new state:
-
+  // console.log("this is new array ",state.users)
+  console.log("state.users", state?.users);
+  console.log("clubs of city", clubs);
   const renderItem = ({ item }: any) => {
     const image = item.images[0];
 
     // console.log("hilllstatution", item.id);
     return (
       <TouchableOpacity
-        style={{ alignItems: "center", justifyContent: "center" }}
+        style={{ alignItems: "center", justifyContent: "center", }}
         onPress={() => {
           navigation.navigate("Du", {
             itemId: item.id,
@@ -150,6 +217,7 @@ const Clubs = ({ navigation, route }: AnimalProps) => {
             itemRegion: item.region,
             itemAddress1: item.address1,
             itemAddress2: item.address2,
+            
           });
         }}
       >
@@ -162,7 +230,7 @@ const Clubs = ({ navigation, route }: AnimalProps) => {
           overlayColor="#000000"
           //  "#19282F"
           overlayAlpha={0.6}
-          source={{ uri: item.images[0] }}
+          source={{ uri: item.images[0] || "" }}
           resizeMode="cover"
           containerStyle={{
             height: 90,
@@ -213,6 +281,7 @@ const Clubs = ({ navigation, route }: AnimalProps) => {
                   itemRegion: item.region,
                   itemAddress1: item.address1,
                   itemAddress2: item.address2,
+                 
                 });
               }}
             >
@@ -239,12 +308,16 @@ const Clubs = ({ navigation, route }: AnimalProps) => {
     >
       <View
         style={{
-          paddingTop: 30,
-          paddingBottom: 30,
+          marginTop: 20,
+          // paddingTop: 30,
+          // paddingBottom: 30,
           // flexDirection: "row",
           // justifyContent: "center",
           // alignItems: "center",
           // padding: 30,
+          // marginTop:12,
+          // paddingTop:13,
+          // paddingBottom: 8,
         }}
       >
         <View>
@@ -255,16 +328,25 @@ const Clubs = ({ navigation, route }: AnimalProps) => {
               color="#ffffff"
               style={{ paddingLeft: 15 }}
             />
+            {/* <View style={{flexDirection:"row",alignItems: "center",}}> */}
             <TextInput
               style={styles.inputDesign}
               placeholder="SEARCH CLUBS"
               placeholderTextColor="#ffffff"
               autoCapitalize={"words"}
-              selectionColor={"#ffffff"}
-              onChangeText={(text) => setSearchAffiliate(text)}
+              selectionColor={"#927E5A"}
+              onChangeText={(SearchAffiliate_) =>
+                setSearchAffiliate(SearchAffiliate_)
+              }
               onSubmitEditing={SearchAffiliate_}
               value={SearchAffiliate}
             ></TextInput>
+            {/* { SearchAffiliate ?<TouchableOpacity onPress={() =>setSearchAffiliate("")}>
+            
+            <EvilIcons name="close-o" size={26} color="#ffffff" />
+           
+            </TouchableOpacity>:null}
+            </View> */}
             {/* <TextInput
               style={{
                 width: 365,
@@ -309,13 +391,29 @@ const Clubs = ({ navigation, route }: AnimalProps) => {
         showsVerticalScrollIndicator={false}
       >
         <FlatList
-          data={state?.users}
+          data={filteredClubs}
           keyExtractor={(item, index) => item.id.toString()}
           initialNumToRender={1}
           showsVerticalScrollIndicator={false}
           renderItem={renderItem}
           // style={{ height: 500 }}
         />
+
+        {state?.users && clubs && filteredClubs.length !== totalClubCount && !SearchAffiliate && totalClubCount > 25 && (
+          <Text
+            style={{
+              color: "#927E5A",
+              textAlign: "center",
+              alignSelf: "center",
+              marginTop: 15,
+              fontSize: 16,
+              fontFamily: "BaskervilleRegular",
+            }}
+            onPress={() => setPageCount(pageCount + pageCount)}
+          >
+            LOAD MORE
+          </Text>
+        )}
       </ScrollView>
     </View>
   );
@@ -333,7 +431,7 @@ const styles = StyleSheet.create({
     fontFamily: "BaskervilleRegular",
     backgroundColor: "#B79D71",
     color: "#ffffff",
-    width: "100%",
+    width: "85%",
     height: 50,
     paddingLeft: 10,
   },

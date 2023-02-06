@@ -13,8 +13,9 @@ import moment from "moment";
 import CalendarStrip from "react-native-calendar-strip";
 import { Feather } from "@expo/vector-icons";
 import { Context as Actions } from "../Context/Actions";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const ClubsPromotionProfile = ({ HEIGHT, clubId }) => {
   const navigation = useNavigation();
@@ -29,7 +30,15 @@ const ClubsPromotionProfile = ({ HEIGHT, clubId }) => {
   const [select, setSelect] = useState(true);
   const [showClubEvents, setShowClubEvents] = useState("");
   const [firstRun, setFirstRun] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true)
 
+
+
+//   useEffect(()=>{
+// setTimeout(()=>{
+//   setIsLoading(false)
+// },6000)
+//   },[])
   // console.log("Showing Club Id >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", clubId)
 
   useEffect(() => {
@@ -52,6 +61,19 @@ const ClubsPromotionProfile = ({ HEIGHT, clubId }) => {
     //   "EVENT USEEFFECT ========>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
     // );
   }, [clubId]);
+
+  console.log("hello this is id",clubId)
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     console.log(
+  //       "====================================Screen focused======================="
+  //     );
+  //     if (clubId) {
+  //       onEventsByClubs(clubId);
+  //     }
+   
+  //   }, [clubId])
+  // );
 
   // console.log(
   //   " event events ..................................>>>>>",
@@ -87,8 +109,10 @@ const ClubsPromotionProfile = ({ HEIGHT, clubId }) => {
           (item) => moment(item.date).format("DD-MM-YYYY") === tempdate
         )
       );
+      // setIsLoading(false)
     } else {
       setShowClubEvents([]);
+      // setIsLoading(false)
       // console.log("no event today");
     }
   };
@@ -110,9 +134,11 @@ const ClubsPromotionProfile = ({ HEIGHT, clubId }) => {
     // console.log(
     //   "clubsPromotionProfile initial useEffect >>>>>>>>>>>>>>>>>>",
     //   showClubEvents
-    // );
+    // );.
+   
     if (state?.eventClub && state?.eventClub.length > 0) {
       const userArray = state?.eventClub;
+      
       // console.log(
       //   "Inside first run if============================================================"
       // );
@@ -126,6 +152,7 @@ const ClubsPromotionProfile = ({ HEIGHT, clubId }) => {
 
   // console.log("=======================================", state.eventClub);
 
+  
   const renderItem = ({ item }: any) => {
     const date = moment(item.date).format("DD MMMM YYYY");
 
@@ -207,7 +234,7 @@ const ClubsPromotionProfile = ({ HEIGHT, clubId }) => {
     // console.log("==============Showing state.eventClub=====================", state.eventClub)
     // console.log("selected date -----------", date);
     let eventDateArray = [];
-    state.eventClub.forEach((obj) => {
+    state?.eventClub.forEach((obj) => {
       const apitempdate = moment(obj.date).format("DD-MM-YYYY");
       eventDateArray.push(apitempdate);
     });
@@ -215,14 +242,17 @@ const ClubsPromotionProfile = ({ HEIGHT, clubId }) => {
     if (eventDateArray.includes(tempdate)) {
       // console.log("Event exists");
       setShowClubEvents(
-        state.eventClub.filter(
+        state?.eventClub.filter(
           (item) => moment(item.date).format("DD-MM-YYYY") === tempdate
         )
       );
+  
     } else {
       setShowClubEvents([]);
+      
       // console.log("no event today");
     }
+    
   };
 
   // console.log("Initial show events ===================================================================", showClubEvents);
@@ -236,7 +266,19 @@ const ClubsPromotionProfile = ({ HEIGHT, clubId }) => {
   ];
 
   // let datesBlacklist = [moment().add(3, 'days')]; // 1 day disabled
-
+  // if (isLoading) {
+  //   return (
+  //     <Spinner
+  //       //visibility of Overlay Loading Spinner
+  //       visible={isLoading}
+  //       color={"#927E5A"}
+  //       //Text with the Spinner
+  //       textContent={'Loading...'}
+  //       //Text style of the Spinner Text
+  //       textStyle={styles.spinnerTextStyle}
+  //     />
+  //   )
+  // }
   return (
     <>
       <View style={{ flex: 1 }}>
@@ -286,7 +328,7 @@ const ClubsPromotionProfile = ({ HEIGHT, clubId }) => {
         <View style={{}}>
           <ScrollView
             // style={{ flex: 1 }}
-            contentContainerStyle={{ paddingBottom: 100 }}
+            contentContainerStyle={{ paddingBottom: 200}}
             showsVerticalScrollIndicator={false}
           >
             <FlatList
@@ -323,5 +365,8 @@ const styles = StyleSheet.create({
   lineBreak: {
     borderBottomColor: "#927E5A",
     borderBottomWidth: 1,
+  },
+  spinnerTextStyle: {
+    color: '#927E5A',
   },
 });

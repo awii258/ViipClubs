@@ -16,6 +16,7 @@ import { Context as Actions } from "../Context/Actions";
 import FavoriteScreen from "../Screens/FavoriteScreen";
 import HeaderIcon from "../Components/HeaderIcon";
 import Images from "../Screens/Images"
+import RestaurantTop from "../Screens/RestaurantTop";
 import Test from "../Screens/Test";
 import SubscriptionsMember from "../Screens/Subscriptions/SubscriptionsMember";
 
@@ -32,6 +33,7 @@ import TopTab from "../Screens/TopTab"
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { color } from "native-base/lib/typescript/theme/styled-system";
 import { useNavigation } from "@react-navigation/native";
+import BarTopTab from "../Screens/BarTopTab";
 
 const Tab = createBottomTabNavigator();
 
@@ -73,8 +75,8 @@ const Tabs = () => {
       initialRouteName="Home"
     >
       <Tab.Screen
-        name="Clubs"
-        component={Towns}
+        name="Clubs & Bars"
+        component={BarTopTab}
         options={{
           tabBarLabel: "Home",
           // tabBarShowLabel: false,
@@ -128,11 +130,11 @@ const Tabs = () => {
       />
       <Tab.Screen
         name="Bars"
-        component={Bars}
+        component={RestaurantTop}
         options={{
           tabBarShowLabel: false,
           // headerShown: false,
-          title:"Events",
+          title:"Restaurants",
           headerTintColor: "#927E5A",
           headerTitleAlign: "center",
           headerTitleStyle: {
@@ -161,11 +163,11 @@ const Tabs = () => {
                 style={{
                   tintColor: focused ? "#927E5A" : "#FFFFFF",
                   height: 26.67,
-                  width: 24,
+                  width: 50,
                   margin: 5,
                 }}
                 resizeMode="contain"
-                source={require("../../assets/Image/events1.png")}
+                source={require("../../assets/Image/Restaurant4.png")}
               />
 
               <Text
@@ -176,7 +178,7 @@ const Tabs = () => {
                   fontFamily: "OpenSansRegular",
                 }}
               >
-                Events
+                 Restaurants
               </Text>
             </View>
           ),
@@ -185,6 +187,7 @@ const Tabs = () => {
       <Tab.Screen
         name="Queue Jump"
         component={Qrcode}
+        initialParams={{ fromScreen: "access" }}
         options={{
           tabBarShowLabel: false,
           // headerShown: false,
@@ -215,9 +218,11 @@ const Tabs = () => {
               <Image
                 style={{
                   tintColor: focused ? "#927E5A" : "#FFFFFF",
-                  height: 26.67,
-                  width: 27,
+                  height: 35,
+                  width: 80,
                   margin: 5,
+                  // marginRight:20,
+                  marginRight: Platform.OS === "ios" ?20:0,
                 }}
                 resizeMode="contain"
                 source={require("../../assets/Image/vip_logo_icon.png")}
@@ -229,7 +234,9 @@ const Tabs = () => {
                   alignItems: "center",
                   fontSize: 10.5,
                   fontFamily: "OpenSansRegular",
-                  marginBottom:2
+                  marginBottom:10,
+                  // marginRight:10,
+                  marginRight: Platform.OS === "ios" ?10:0,
                 }}
               >
                 Queue Jump
